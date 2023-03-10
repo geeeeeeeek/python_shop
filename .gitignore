@@ -1,0 +1,11 @@
+/server/myapp/migrations
+/server/myapp/views/__pycache__/
+/server/.idea
+/web/.idea
+/web/dist
+/web/node_modules
+/server/.idea/
+/.idea/
+__pycache__
+.idea
+server/.idea
