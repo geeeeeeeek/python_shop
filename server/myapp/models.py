@@ -59,14 +59,14 @@ class Classification(models.Model):
         db_table = "b_classification"
 
 
-class Book(models.Model):
+class Thing(models.Model):
     STATUS_CHOICES = (
         ('0', '上架'),
         ('1', '下架'),
     )
     id = models.BigAutoField(primary_key=True)
     classification = models.ForeignKey(Classification, on_delete=models.CASCADE, blank=True, null=True,
-                                       related_name='classification_book')
+                                       related_name='classification_thing')
     tag = models.ManyToManyField(Tag, blank=True)
     title = models.CharField(max_length=100, blank=True, null=True)
     original_title = models.CharField(max_length=100, blank=True, null=True)
@@ -87,20 +87,20 @@ class Book(models.Model):
     create_time = models.DateTimeField(auto_now_add=True, null=True)
     pv = models.IntegerField(default=0)
     recommend_count = models.IntegerField(default=0)
-    wish = models.ManyToManyField(User, blank=True, related_name="wish_books")
+    wish = models.ManyToManyField(User, blank=True, related_name="wish_things")
     wish_count = models.IntegerField(default=0)
-    collect = models.ManyToManyField(User, blank=True, related_name="collect_books")
+    collect = models.ManyToManyField(User, blank=True, related_name="collect_things")
     collect_count = models.IntegerField(default=0)
 
     class Meta:
-            db_table = "b_book"
+            db_table = "b_thing"
 
 
 class Comment(models.Model):
     id = models.BigAutoField(primary_key=True)
     content = models.CharField(max_length=200, blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='user_comment')
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, null=True, related_name='book_comment')
+    thing = models.ForeignKey(Thing, on_delete=models.CASCADE, null=True, related_name='thing_comment')
     comment_time = models.DateTimeField(auto_now_add=True, null=True)
     like_count = models.IntegerField(default=0)
 
@@ -111,7 +111,7 @@ class Comment(models.Model):
 class Record(models.Model):
     id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='user_record')
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, null=True, related_name='book_record')
+    thing = models.ForeignKey(Thing, on_delete=models.CASCADE, null=True, related_name='thing_record')
     title = models.CharField(max_length=100, blank=True, null=True)
     classification = models.ForeignKey(Classification, on_delete=models.CASCADE, null=True,
                                        related_name='classification')
@@ -160,7 +160,7 @@ class ErrorLog(models.Model):
 class Borrow(models.Model):
     id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='user_borrow')
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, null=True, related_name='book_borrow')
+    thing = models.ForeignKey(Thing, on_delete=models.CASCADE, null=True, related_name='thing_borrow')
     status = models.CharField(max_length=2, blank=True, null=True)  # 1借出 2已还
     borrow_time = models.DateTimeField(auto_now_add=True, null=True)
     expect_time = models.DateTimeField(null=True)  # 应还时间
@@ -174,7 +174,7 @@ class Borrow(models.Model):
 class BorrowLog(models.Model):
     id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='user_borrow_log')
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, null=True, related_name='book_borrow_log')
+    thing = models.ForeignKey(Thing, on_delete=models.CASCADE, null=True, related_name='thing_borrow_log')
     action = models.CharField(max_length=2, blank=True, null=True)
     log_time = models.DateTimeField(auto_now_add=True, null=True)
 
@@ -185,7 +185,7 @@ class BorrowLog(models.Model):
 class Banner(models.Model):
     id = models.BigAutoField(primary_key=True)
     image = models.ImageField(upload_to='banner/', null=True)
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, null=True, related_name='book_banner')
+    thing = models.ForeignKey(Thing, on_delete=models.CASCADE, null=True, related_name='thing_banner')
     create_time = models.DateTimeField(auto_now_add=True, null=True)
 
     class Meta:

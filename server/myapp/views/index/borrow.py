@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, authentication_classes
 
 from myapp.auth.authentication import TokenAuthtication
 from myapp.handler import APIResponse
-from myapp.models import Borrow, Book
+from myapp.models import Borrow, Thing
 from myapp.serializers import BorrowSerializer
 
 
@@ -28,14 +28,14 @@ def create(request):
     """
 
     data = request.data.copy()
-    if data['user'] is None or data['book'] is None:
+    if data['user'] is None or data['thing'] is None:
         return APIResponse(code=1, msg='参数错误')
 
-    book = Book.objects.get(pk=data['book'])
-    if book.repertory <= 0:
+    thing = Thing.objects.get(pk=data['thing'])
+    if thing.repertory <= 0:
         return APIResponse(code=1, msg='库存不足')
 
-    borrows = Borrow.objects.filter(book=data['book']).filter(user=data['user']).filter(status='1')
+    borrows = Borrow.objects.filter(thing=data['thing']).filter(user=data['user']).filter(status='1')
     if len(borrows) > 0:
         return APIResponse(code=1, msg='您已经借过该书了')
 
@@ -49,8 +49,8 @@ def create(request):
     if serializer.is_valid():
         serializer.save()
         # 减库存
-        book.repertory = book.repertory - 1
-        book.save()
+        thing.repertory = thing.repertory - 1
+        thing.save()
 
         return APIResponse(code=0, msg='借书成功', data=serializer.data)
     else:
@@ -60,7 +60,7 @@ def create(request):
 
 @api_view(['POST'])
 @authentication_classes([TokenAuthtication])
-def return_book(request):
+def return_thing(request):
     """
     还书
     """
@@ -77,10 +77,10 @@ def return_book(request):
     if serializer.is_valid():
         serializer.save()
         # 加库存
-        bookId = request.data['book']
-        book = Book.objects.get(pk=bookId)
-        book.repertory = book.repertory + 1
-        book.save()
+        thingId = request.data['thing']
+        thing = Thing.objects.get(pk=thingId)
+        thing.repertory = thing.repertory + 1
+        thing.save()
 
         # 加积分
         borrow.user.score = borrow.user.score + 1

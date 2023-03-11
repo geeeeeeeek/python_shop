@@ -13,7 +13,7 @@ from rest_framework.decorators import api_view, authentication_classes
 from myapp import utils
 from myapp.handler import APIResponse
 
-from myapp.models import Book, Borrow
+from myapp.models import Thing, Borrow
 from myapp.utils import dict_fetchall
 from myapp.auth.authentication import AdminTokenAuthtication
 
@@ -23,9 +23,9 @@ from myapp.auth.authentication import AdminTokenAuthtication
 def count(request):
     if request.method == 'GET':
         now = datetime.datetime.now()
-        book_count = Book.objects.all().count()
+        thing_count = Thing.objects.all().count()
         # print(utils.get_monday())
-        book_week_count = Book.objects.filter(create_time__gte=utils.get_monday()).count()
+        thing_week_count = Thing.objects.filter(create_time__gte=utils.get_monday()).count()
         borrow_count = Borrow.objects.filter(status='1').count()
         return_count = Borrow.objects.filter(status='2').count()
         overdue_count = Borrow.objects.filter(expect_time__lt=now).count()
@@ -56,14 +56,14 @@ def count(request):
             overdue_person_count = len(sql_data)
 
         # 统计借阅排名(sql语句)
-        sql_str = "select A.book_id, B.title, count(A.book_id) as count from b_borrow A join b_book B on " \
-                  "A.book_id=B.id group by A.book_id order by count desc; "
+        sql_str = "select A.thing_id, B.title, count(A.thing_id) as count from b_borrow A join b_thing B on " \
+                  "A.thing_id=B.id group by A.thing_id order by count desc; "
         with connection.cursor() as cursor:
             cursor.execute(sql_str)
             borrow_rank_data = dict_fetchall(cursor)
 
         # 统计分类比例(sql语句)
-        sql_str = "select B.title, count(B.title) as count from b_book A join B_classification B on " \
+        sql_str = "select B.title, count(B.title) as count from b_thing A join B_classification B on " \
                   "A.classification_id = B.id group by B.title order by count desc limit 5; "
         with connection.cursor() as cursor:
             cursor.execute(sql_str)
@@ -88,8 +88,8 @@ def count(request):
                 })
 
         data = {
-            'book_count': book_count,
-            'book_week_count': book_week_count,
+            'thing_count': thing_count,
+            'thing_week_count': thing_week_count,
             'borrow_count': borrow_count,
             'borrow_person_count': borrow_person_count,
             'return_count': return_count,

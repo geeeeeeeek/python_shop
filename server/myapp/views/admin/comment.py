@@ -11,7 +11,7 @@ from myapp.serializers import CommentSerializer
 @api_view(['GET'])
 def list_api(request):
     if request.method == 'GET':
-        comments = Comment.objects.select_related("book").all().order_by('-comment_time')
+        comments = Comment.objects.select_related("thing").all().order_by('-comment_time')
         # print(comments)
         serializer = CommentSerializer(comments, many=True)
         return APIResponse(code=0, msg='查询成功', data=serializer.data)

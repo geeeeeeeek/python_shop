@@ -1,41 +1,41 @@
 from rest_framework import serializers
 
-from myapp.models import Book, Classification, Tag, User, Comment, Record, LoginLog, Borrow, BorrowLog, OpLog, Banner, \
+from myapp.models import Thing, Classification, Tag, User, Comment, Record, LoginLog, Borrow, BorrowLog, OpLog, Banner, \
     Ad, Notice, ErrorLog, Address
 
 
-class BookSerializer(serializers.ModelSerializer):
+class ThingSerializer(serializers.ModelSerializer):
     # 额外字段
     classification_title = serializers.ReadOnlyField(source='classification.title')
 
     class Meta:
-        model = Book
+        model = Thing
         fields = '__all__'
 
-class DetailBookSerializer(serializers.ModelSerializer):
+class DetailThingSerializer(serializers.ModelSerializer):
     # 额外字段
     classification_title = serializers.ReadOnlyField(source='classification.title')
 
     class Meta:
-        model = Book
+        model = Thing
         # 排除多对多字段
         exclude = ('wish', 'collect',)
 
-class UpdateBookSerializer(serializers.ModelSerializer):
+class UpdateThingSerializer(serializers.ModelSerializer):
     # 额外字段
     classification_title = serializers.ReadOnlyField(source='classification.title')
 
     class Meta:
-        model = Book
+        model = Thing
         # 排除多对多字段
         exclude = ('wish', 'collect',)
 
-class ListBookSerializer(serializers.ModelSerializer):
+class ListThingSerializer(serializers.ModelSerializer):
     # 额外字段
     classification_title = serializers.ReadOnlyField(source='classification.title')
 
     class Meta:
-        model = Book
+        model = Thing
         # 排除字段
         exclude = ('wish', 'collect', 'description',)
 
@@ -64,12 +64,12 @@ class UserSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     comment_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', required=False)
     # 额外字段
-    title = serializers.ReadOnlyField(source='book.title')
+    title = serializers.ReadOnlyField(source='thing.title')
     username = serializers.ReadOnlyField(source='user.username')
 
     class Meta:
         model = Comment
-        fields = ['id', 'content', 'comment_time', 'like_count', 'book', 'user', 'title', 'username']
+        fields = ['id', 'content', 'comment_time', 'like_count', 'thing', 'user', 'title', 'username']
 
 
 class RecordSerializer(serializers.ModelSerializer):
@@ -108,8 +108,8 @@ class BorrowSerializer(serializers.ModelSerializer):
     return_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', required=False)
     # extra
     username = serializers.ReadOnlyField(source='user.username')
-    title = serializers.ReadOnlyField(source='book.title')
-    cover = serializers.FileField(source='book.cover', required=False)
+    title = serializers.ReadOnlyField(source='thing.title')
+    cover = serializers.FileField(source='thing.cover', required=False)
 
     class Meta:
         model = Borrow
@@ -125,7 +125,7 @@ class BorrowLogSerializer(serializers.ModelSerializer):
 class BannerSerializer(serializers.ModelSerializer):
     create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', required=False)
     # extra
-    title = serializers.ReadOnlyField(source='book.title')
+    title = serializers.ReadOnlyField(source='thing.title')
 
     class Meta:
         model = Banner

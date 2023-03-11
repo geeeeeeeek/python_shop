@@ -4,9 +4,9 @@ from rest_framework.decorators import api_view, authentication_classes
 from myapp import utils
 from myapp.auth.authentication import AdminTokenAuthtication
 from myapp.handler import APIResponse
-from myapp.models import Classification, Book, Tag
+from myapp.models import Classification, Thing, Tag
 from myapp.permission.permission import isDemoAdminUser
-from myapp.serializers import BookSerializer, UpdateBookSerializer
+from myapp.serializers import ThingSerializer, UpdateThingSerializer
 
 
 @api_view(['GET'])
@@ -16,18 +16,18 @@ def list_api(request):
         c = request.GET.get("c", None)
         tag = request.GET.get("tag", None)
         if keyword:
-            books = Book.objects.filter(title__contains=keyword).order_by('-create_time')
+            things = Thing.objects.filter(title__contains=keyword).order_by('-create_time')
         elif c:
             classification = Classification.objects.get(pk=c)
-            books = classification.classification_book.all()
+            things = classification.classification_thing.all()
         elif tag:
             tag = Tag.objects.get(id=tag)
             print(tag)
-            books = tag.book_set.all()
+            things = tag.thing_set.all()
         else:
-            books = Book.objects.all().order_by('-create_time')
+            things = Thing.objects.all().order_by('-create_time')
 
-        serializer = BookSerializer(books, many=True)
+        serializer = ThingSerializer(things, many=True)
         return APIResponse(code=0, msg='查询成功', data=serializer.data)
 
 
@@ -36,13 +36,13 @@ def detail(request):
 
     try:
         pk = request.GET.get('id', -1)
-        book = Book.objects.get(pk=pk)
-    except Book.DoesNotExist:
+        thing = Thing.objects.get(pk=pk)
+    except Thing.DoesNotExist:
         utils.log_error(request, '对象不存在')
         return APIResponse(code=1, msg='对象不存在')
 
     if request.method == 'GET':
-        serializer = BookSerializer(book)
+        serializer = ThingSerializer(thing)
         return APIResponse(code=0, msg='查询成功', data=serializer.data)
 
 
@@ -53,7 +53,7 @@ def create(request):
     if isDemoAdminUser(request):
         return APIResponse(code=1, msg='演示帐号无法操作')
 
-    serializer = BookSerializer(data=request.data)
+    serializer = ThingSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
         return APIResponse(code=0, msg='创建成功', data=serializer.data)
@@ -73,11 +73,11 @@ def update(request):
 
     try:
         pk = request.GET.get('id', -1)
-        book = Book.objects.get(pk=pk)
-    except Book.DoesNotExist:
+        thing = Thing.objects.get(pk=pk)
+    except Thing.DoesNotExist:
         return APIResponse(code=1, msg='对象不存在')
 
-    serializer = UpdateBookSerializer(book, data=request.data)
+    serializer = UpdateThingSerializer(thing, data=request.data)
     if serializer.is_valid():
         serializer.save()
         return APIResponse(code=0, msg='查询成功', data=serializer.data)
@@ -98,7 +98,7 @@ def delete(request):
     try:
         ids = request.GET.get('ids')
         ids_arr = ids.split(',')
-        Book.objects.filter(id__in=ids_arr).delete()
-    except Book.DoesNotExist:
+        Thing.objects.filter(id__in=ids_arr).delete()
+    except Thing.DoesNotExist:
         return APIResponse(code=1, msg='对象不存在')
     return APIResponse(code=0, msg='删除成功')

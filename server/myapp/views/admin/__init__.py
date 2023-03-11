@@ -1,4 +1,4 @@
-from myapp.views.admin.book import *
+from myapp.views.admin.thing import *
 from myapp.views.admin.classification import *
 from myapp.views.admin.tag import *
 from myapp.views.admin.user import *

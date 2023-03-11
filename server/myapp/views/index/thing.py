@@ -4,8 +4,8 @@ from rest_framework.decorators import api_view, authentication_classes
 
 from myapp import utils
 from myapp.handler import APIResponse
-from myapp.models import Classification, Book, Tag, User
-from myapp.serializers import BookSerializer, ClassificationSerializer, ListBookSerializer, DetailBookSerializer
+from myapp.models import Classification, Thing, Tag, User
+from myapp.serializers import ThingSerializer, ClassificationSerializer, ListThingSerializer, DetailThingSerializer
 from myapp.utils import dict_fetchall
 
 
@@ -25,7 +25,7 @@ def list_api(request):
             order = '-pv'
 
         if keyword:
-            books = Book.objects.filter(title__contains=keyword).order_by(order)
+            things = Thing.objects.filter(title__contains=keyword).order_by(order)
         elif c and int(c) > -1:
             ids = [c]
             classifications = Classification.objects.filter(pid=c)
@@ -36,16 +36,16 @@ def list_api(request):
                 ids.append(item['id'])
             print(ids)
 
-            books = Book.objects.filter(classification_id__in=ids).order_by(order)
+            things = Thing.objects.filter(classification_id__in=ids).order_by(order)
 
         elif tag:
             tag = Tag.objects.get(id=tag)
             print(tag)
-            books = tag.book_set.all().order_by(order)
+            things = tag.thing_set.all().order_by(order)
         else:
-            books = Book.objects.all().defer('wish').order_by(order)
+            things = Thing.objects.all().defer('wish').order_by(order)
 
-        serializer = ListBookSerializer(books, many=True)
+        serializer = ListThingSerializer(things, many=True)
         return APIResponse(code=0, msg='查询成功', data=serializer.data)
 
 
@@ -53,13 +53,13 @@ def list_api(request):
 def detail(request):
     try:
         pk = request.GET.get('id', -1)
-        book = Book.objects.get(pk=pk)
-    except Book.DoesNotExist:
+        thing = Thing.objects.get(pk=pk)
+    except Thing.DoesNotExist:
         utils.log_error(request, '对象不存在')
         return APIResponse(code=1, msg='对象不存在')
 
     if request.method == 'GET':
-        serializer = BookSerializer(book)
+        serializer = ThingSerializer(thing)
         return APIResponse(code=0, msg='查询成功', data=serializer.data)
 
 
@@ -67,83 +67,83 @@ def detail(request):
 def increaseWishCount(request):
     try:
         pk = request.GET.get('id', -1)
-        book = Book.objects.get(pk=pk)
+        thing = Thing.objects.get(pk=pk)
         # wish_count加1
-        book.wish_count = book.wish_count + 1
-        book.save()
-    except Book.DoesNotExist:
+        thing.wish_count = thing.wish_count + 1
+        thing.save()
+    except Thing.DoesNotExist:
         utils.log_error(request, '对象不存在')
         return APIResponse(code=1, msg='对象不存在')
 
-    serializer = BookSerializer(book)
+    serializer = ThingSerializer(thing)
     return APIResponse(code=0, msg='操作成功', data=serializer.data)
 
 @api_view(['POST'])
 def increaseRecommendCount(request):
     try:
         pk = request.GET.get('id', -1)
-        book = Book.objects.get(pk=pk)
+        thing = Thing.objects.get(pk=pk)
         # recommend_count加1
-        book.recommend_count = book.recommend_count + 1
-        book.save()
-    except Book.DoesNotExist:
+        thing.recommend_count = thing.recommend_count + 1
+        thing.save()
+    except Thing.DoesNotExist:
         utils.log_error(request, '对象不存在')
         return APIResponse(code=1, msg='对象不存在')
 
-    serializer = BookSerializer(book)
+    serializer = ThingSerializer(thing)
     return APIResponse(code=0, msg='操作成功', data=serializer.data)
 
 @api_view(['POST'])
 def addWishUser(request):
     try:
         username = request.GET.get('username', None)
-        bookId = request.GET.get('bookId', None)
+        thingId = request.GET.get('thingId', None)
 
-        if username and bookId:
+        if username and thingId:
             user = User.objects.get(username=username)
-            book = Book.objects.get(pk=bookId)
+            thing = Thing.objects.get(pk=thingId)
 
-            if user not in book.wish.all():
-                book.wish.add(user)
-                book.wish_count += 1
-                book.save()
+            if user not in thing.wish.all():
+                thing.wish.add(user)
+                thing.wish_count += 1
+                thing.save()
 
-    except Book.DoesNotExist:
+    except Thing.DoesNotExist:
         utils.log_error(request, '操作失败')
         return APIResponse(code=1, msg='操作失败')
 
-    serializer = BookSerializer(book)
+    serializer = ThingSerializer(thing)
     return APIResponse(code=0, msg='操作成功', data=serializer.data)
 
 @api_view(['POST'])
 def removeWishUser(request):
     try:
         username = request.GET.get('username', None)
-        bookId = request.GET.get('bookId', None)
+        thingId = request.GET.get('thingId', None)
 
-        if username and bookId:
+        if username and thingId:
             user = User.objects.get(username=username)
-            book = Book.objects.get(pk=bookId)
+            thing = Thing.objects.get(pk=thingId)
 
-            if user in book.wish.all():
-                book.wish.remove(user)
-                book.wish_count -= 1
-                book.save()
+            if user in thing.wish.all():
+                thing.wish.remove(user)
+                thing.wish_count -= 1
+                thing.save()
 
-    except Book.DoesNotExist:
+    except Thing.DoesNotExist:
         utils.log_error(request, '操作失败')
         return APIResponse(code=1, msg='操作失败')
 
     return APIResponse(code=0, msg='操作成功')
 
 @api_view(['GET'])
-def getWishBookList(request):
+def getWishThingList(request):
     try:
         username = request.GET.get('username', None)
         if username:
             user = User.objects.get(username=username)
-            books = user.wish_books.all()
-            serializer = ListBookSerializer(books, many=True)
+            things = user.wish_things.all()
+            serializer = ListThingSerializer(things, many=True)
             return APIResponse(code=0, msg='操作成功', data=serializer.data)
         else:
             return APIResponse(code=1, msg='username不能为空')
@@ -157,22 +157,22 @@ def getWishBookList(request):
 def addCollectUser(request):
     try:
         username = request.GET.get('username', None)
-        bookId = request.GET.get('bookId', None)
+        thingId = request.GET.get('thingId', None)
 
-        if username and bookId:
+        if username and thingId:
             user = User.objects.get(username=username)
-            book = Book.objects.get(pk=bookId)
+            thing = Thing.objects.get(pk=thingId)
 
-            if user not in book.collect.all():
-                book.collect.add(user)
-                book.collect_count += 1
-                book.save()
+            if user not in thing.collect.all():
+                thing.collect.add(user)
+                thing.collect_count += 1
+                thing.save()
 
-    except Book.DoesNotExist:
+    except Thing.DoesNotExist:
         utils.log_error(request, '操作失败')
         return APIResponse(code=1, msg='操作失败')
 
-    serializer = DetailBookSerializer(book)
+    serializer = DetailThingSerializer(thing)
     return APIResponse(code=0, msg='操作成功', data=serializer.data)
 
 
@@ -180,18 +180,18 @@ def addCollectUser(request):
 def removeCollectUser(request):
     try:
         username = request.GET.get('username', None)
-        bookId = request.GET.get('bookId', None)
+        thingId = request.GET.get('thingId', None)
 
-        if username and bookId:
+        if username and thingId:
             user = User.objects.get(username=username)
-            book = Book.objects.get(pk=bookId)
+            thing = Thing.objects.get(pk=thingId)
 
-            if user in book.collect.all():
-                book.collect.remove(user)
-                book.collect_count -= 1
-                book.save()
+            if user in thing.collect.all():
+                thing.collect.remove(user)
+                thing.collect_count -= 1
+                thing.save()
 
-    except Book.DoesNotExist:
+    except Thing.DoesNotExist:
         utils.log_error(request, '操作失败')
         return APIResponse(code=1, msg='操作失败')
 
@@ -199,13 +199,13 @@ def removeCollectUser(request):
 
 
 @api_view(['GET'])
-def getCollectBookList(request):
+def getCollectThingList(request):
     try:
         username = request.GET.get('username', None)
         if username:
             user = User.objects.get(username=username)
-            books = user.collect_books.all()
-            serializer = ListBookSerializer(books, many=True)
+            things = user.collect_things.all()
+            serializer = ListThingSerializer(things, many=True)
             return APIResponse(code=0, msg='操作成功', data=serializer.data)
         else:
             return APIResponse(code=1, msg='username不能为空')

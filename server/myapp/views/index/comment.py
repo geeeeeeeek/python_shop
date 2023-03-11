@@ -11,21 +11,21 @@ from myapp.serializers import CommentSerializer
 @api_view(['GET'])
 def list_api(request):
     if request.method == 'GET':
-        bookId = request.GET.get("bookId", None)
+        thingId = request.GET.get("thingId", None)
         order = request.GET.get("order", 'recent')
 
-        if bookId:
+        if thingId:
             if order == 'recent':
                 orderBy = '-comment_time'
             else:
                 orderBy = '-like_count'
 
-            comments = Comment.objects.select_related("book").filter(book=bookId).order_by(orderBy)
+            comments = Comment.objects.select_related("thing").filter(thing=thingId).order_by(orderBy)
             # print(comments)
             serializer = CommentSerializer(comments, many=True)
             return APIResponse(code=0, msg='查询成功', data=serializer.data)
         else:
-            return APIResponse(code=1, msg='bookId不能为空')
+            return APIResponse(code=1, msg='thingId不能为空')
 
 @api_view(['GET'])
 def list_my_comment(request):
@@ -39,7 +39,7 @@ def list_my_comment(request):
             else:
                 orderBy = '-like_count'
 
-            comments = Comment.objects.select_related("book").filter(user=userId).order_by(orderBy)
+            comments = Comment.objects.select_related("thing").filter(user=userId).order_by(orderBy)
             # print(comments)
             serializer = CommentSerializer(comments, many=True)
             return APIResponse(code=0, msg='查询成功', data=serializer.data)
