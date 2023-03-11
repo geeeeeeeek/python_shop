@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import {listApi, createApi, updateApi, returnBookApi, delayApi} from '@/api/admin/borrow'
+import {listApi, createApi, updateApi, returnThingApi, delayApi} from '@/api/admin/borrow'
 
 const columns = [
   {
@@ -57,7 +57,7 @@ const columns = [
     align: 'center'
   },
   {
-    title: '图书',
+    title: '商品',
     dataIndex: 'title',
     key: 'title',
     align: 'center'
@@ -134,10 +134,10 @@ export default {
       this.$confirm({
         title: '确定还书?',
         onOk() {
-          returnBookApi({
+          returnThingApi({
             id: record.id
           }, {
-            book: record.book,
+            thing: record.thing,
             status: '2'
           }).then(res => {
             that.$message.success('还书成功')

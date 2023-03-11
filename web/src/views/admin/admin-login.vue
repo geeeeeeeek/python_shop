@@ -2,7 +2,7 @@
   <div id="userLayout">
     <div class="user-layout-header">
       <img class="logo" src="@/assets/images/front-logo.png" alt="">
-      <span>图书后台管理系统</span>
+      <span>商城后台管理系统</span>
     </div>
     <div class="container">
       <div class="main">

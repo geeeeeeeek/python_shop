@@ -26,7 +26,7 @@
         <div class="content flex-view">
           <div class="left-list">
             <div class="list-item flex-view">
-              <img src="" class="book-img">
+              <img src="" class="thing-img">
               <div class="detail flex-between flex-view">
                 <div class="flex-between flex-top flex-view">
                   <h2 class="name">这才是服务设计</h2>
@@ -173,7 +173,7 @@ export default {
         cursor: pointer;
       }
 
-      .book-img {
+      .thing-img {
         width: 48px;
         height: 100%;
         margin-right: 12px;

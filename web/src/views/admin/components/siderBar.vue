@@ -67,8 +67,8 @@ export default {
           title: '借阅管理'
         },
         {
-          key: '/admin/book',
-          title: '图书管理'
+          key: '/admin/thing',
+          title: '商品管理'
         },
         {
           key: '/admin/classification',

@@ -35,7 +35,7 @@
         <div class="content flex-view">
           <div class="left-list">
             <div class="list-item flex-view">
-              <img :src="item.cover" class="book-img">
+              <img :src="item.cover" class="thing-img">
               <div class="detail flex-between flex-view">
                 <div class="flex-between flex-top flex-view">
                   <h2 class="name">{{item.title}}</h2>
@@ -60,7 +60,7 @@
         <div class="bottom flex-view">
           <div class="left">
             <span class="text">共1本</span>
-            <span class="open" @click="handleDetail(item.book)">图书详情</span>
+            <span class="open" @click="handleDetail(item.thing)">商品详情</span>
           </div>
         </div>
       </div>
@@ -71,7 +71,7 @@
 
 <script>
 import {listApi} from '@/api/index/borrow'
-import {returnBookApi} from '@/api/index/borrow'
+import {returnThingApi} from '@/api/index/borrow'
 
 export default {
   name: 'BorrowView',
@@ -116,16 +116,16 @@ export default {
       })
     },
     handleReturn (item) {
-      returnBookApi({id: item.id}, {book: item.book}).then(res => {
+      returnThingApi({id: item.id}, {thing: item.thing}).then(res => {
         this.getBorrowList()
         this.$message.success('还书成功')
       }).catch(err => {
         console.log(err)
       })
     },
-    handleDetail (bookId) {
+    handleDetail (thingId) {
       // 跳转新页面
-      let text = this.$router.resolve({name: 'detail', query: {id: bookId}})
+      let text = this.$router.resolve({name: 'detail', query: {id: thingId}})
       window.open(text.href, '_blank')
     },
   }
@@ -216,7 +216,7 @@ export default {
         cursor: pointer;
       }
 
-      .book-img {
+      .thing-img {
         width: 48px;
         height: 100%;
         margin-right: 12px;

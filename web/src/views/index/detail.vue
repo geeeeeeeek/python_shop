@@ -5,17 +5,17 @@
     <div class="detail-content">
       <div class="detail-content-top">
         <div style="position: relative;">
-          <div class="book-infos-view">
-            <div class="book-infos">
-              <div class="book-img-box">
+          <div class="thing-infos-view">
+            <div class="thing-infos">
+              <div class="thing-img-box">
                 <img :src="detailData.cover"/>
               </div>
-              <div class="book-info-box">
-                <div class="book-state">
+              <div class="thing-info-box">
+                <div class="thing-state">
                   <span class="state hidden-sm">书籍状态</span>
                   <span>可借</span>
                 </div>
-                <h1 class="book-name">{{ detailData.title }}</h1>
+                <h1 class="thing-name">{{ detailData.title }}</h1>
                 <div class="authors flex-view">
                   <span>作者：</span>
                   <span class="name">{{ detailData.author }}</span>
@@ -30,7 +30,7 @@
                 </div>
               </div>
             </div>
-            <div class="book-counts hidden-sm">
+            <div class="thing-counts hidden-sm">
               <div class="count-item flex-view pointer" @click="addToWish()">
                 <div class="count-img">
                   <img src="@/assets/images/want-read-hover.svg">
@@ -129,7 +129,7 @@
         </div>
       </div>
       <div class="detail-content-bottom">
-        <div class="book-content-view flex-view">
+        <div class="thing-content-view flex-view">
           <div class="main-content">
             <div class="order-view main-tab">
           <span class="tab"
@@ -143,12 +143,12 @@
             </div>
 
             <!--简介-->
-            <div class="book-intro" :class="selectTabIndex <= 0? '':'hide'">
+            <div class="thing-intro" :class="selectTabIndex <= 0? '':'hide'">
               <p class="text" style="">{{ detailData.description }}</p>
             </div>
 
             <!--评论-->
-            <div class="book-comment" :class="selectTabIndex > 0? '':'hide'">
+            <div class="thing-comment" :class="selectTabIndex > 0? '':'hide'">
               <div class="title">发表新的评论</div>
               <div class="publish flex-view">
                 <img src="@/assets/images/avatar.jpg" class="mine-img">
@@ -192,13 +192,13 @@
           </div>
           <div class="recommend" style="">
             <div class="title">热门推荐</div>
-            <div class="books">
-              <div class="book-item book-item" v-for="item in recommendData" @click="handleDetail(item)">
+            <div class="things">
+              <div class="thing-item thing-item" v-for="item in recommendData" @click="handleDetail(item)">
                 <div class="img-view">
                   <img :src="item.cover">
                 </div>
                 <div class="info-view">
-                  <h3 class="book-name">{{ item.title }}</h3>
+                  <h3 class="thing-name">{{ item.title }}</h3>
                   <p class="authors" v-if="item.author">{{ item.author }}（作者）</p>
                   <p class="translators" v-if="item.translator">{{ item.translator }}（译者）</p>
                 </div>
@@ -218,9 +218,9 @@ import Footer from '@/views/index/components/footer'
 import {
   detailApi,
   addWishUserApi,
-  listApi as listBookList,
+  listApi as listThingList,
   addCollectUserApi
-} from '@/api/index/book'
+} from '@/api/index/thing'
 import {listApi as listCommentListApi, createApi as createCommentApi, likeApi} from '@/api/index/comment'
 import {createApi} from '@/api/index/borrow'
 
@@ -231,7 +231,7 @@ export default {
   },
   data () {
     return {
-      bookId: '',
+      thingId: '',
       detailData: undefined,
       tabUnderLeft: 6,
       tabData: ['简介', '评论'],
@@ -243,9 +243,9 @@ export default {
     }
   },
   mounted () {
-    this.bookId = this.$route.query.id.trim()
-    this.getBookDetail()
-    this.getRecommendBook()
+    this.thingId = this.$route.query.id.trim()
+    this.getThingDetail()
+    this.getRecommendThing()
     this.getCommentList()
   },
   methods: {
@@ -254,8 +254,8 @@ export default {
       console.log(this.selectTabIndex)
       this.tabUnderLeft = 6 + 58 * index
     },
-    getBookDetail () {
-      detailApi({id: this.bookId}).then(res => {
+    getThingDetail () {
+      detailApi({id: this.thingId}).then(res => {
         this.detailData = res.data
         this.detailData.cover = this.$BASE_URL + this.detailData.cover
       }).catch(err => {
@@ -265,7 +265,7 @@ export default {
     addToWish () {
       let username = this.$store.state.user.username
       if (username) {
-        addWishUserApi({bookId: this.bookId, username: username}).then(res => {
+        addWishUserApi({thingId: this.thingId, username: username}).then(res => {
           this.detailData = res.data
           this.detailData.cover = this.$BASE_URL + this.detailData.cover
           this.$message.success('加入成功')
@@ -279,7 +279,7 @@ export default {
     collect () {
       let username = this.$store.state.user.username
       if (username) {
-        addCollectUserApi({bookId: this.bookId, username: username}).then(res => {
+        addCollectUserApi({thingId: this.thingId, username: username}).then(res => {
           this.$message.success('收藏成功')
           this.detailData = res.data
           this.detailData.cover = this.$BASE_URL + this.detailData.cover
@@ -300,11 +300,11 @@ export default {
       const userId = this.$store.state.user.userId
       if (userId) {
         createApi({
-          book: detailData.id,
+          thing: detailData.id,
           user: userId
         }).then(res => {
           this.$message.success('借阅成功')
-          this.getBookDetail()
+          this.getThingDetail()
         }).catch(err => {
           this.$message.error(err.msg || '失败')
         })
@@ -312,8 +312,8 @@ export default {
         this.$message.warn('请先登录')
       }
     },
-    getRecommendBook () {
-      listBookList({sort: 'recommend'}).then(res => {
+    getRecommendThing () {
+      listThingList({sort: 'recommend'}).then(res => {
         res.data.forEach((item, index) => {
           if (item.cover) {
             item.cover = this.$BASE_URL + item.cover
@@ -339,7 +339,7 @@ export default {
       this.$refs.comment.value = ''
       let userId = this.$store.state.user.userId
       if (userId) {
-        createCommentApi({content: text, book: this.bookId, user: userId}).then(res => {
+        createCommentApi({content: text, thing: this.thingId, user: userId}).then(res => {
           this.getCommentList()
         }).catch(err => {
           console.log(err)
@@ -357,7 +357,7 @@ export default {
       })
     },
     getCommentList () {
-      listCommentListApi({bookId: this.bookId, order: this.order}).then(res => {
+      listCommentListApi({thingId: this.thingId, order: this.order}).then(res => {
         this.commentData = res.data
       }).catch(err => {
         console.log(err)
@@ -398,12 +398,12 @@ export default {
   display: none !important;
 }
 
-.book-infos-view {
+.thing-infos-view {
   display: flex;
   margin: 89px 0 40px;
   overflow: hidden;
 
-  .book-infos {
+  .thing-infos {
     -webkit-box-flex: 1;
     -ms-flex: 1;
     flex: 1;
@@ -450,7 +450,7 @@ export default {
     }
   }
 
-  .book-img-box {
+  .thing-img-box {
     -webkit-box-flex: 0;
     -ms-flex: 0 0 235px;
     flex: 0 0 235px;
@@ -466,13 +466,13 @@ export default {
     }
   }
 
-  .book-info-box {
+  .thing-info-box {
     text-align: left;
     padding: 0;
     margin: 0;
   }
 
-  .book-state {
+  .thing-state {
     height: 26px;
     line-height: 26px;
 
@@ -491,7 +491,7 @@ export default {
     }
   }
 
-  .book-name {
+  .thing-name {
     font-size: 24px;
     line-height: 32px;
     margin: 16px 0;
@@ -529,7 +529,7 @@ export default {
     }
   }
 
-  .book-counts {
+  .thing-counts {
     -webkit-box-flex: 0;
     -ms-flex: 0 0 235px;
     flex: 0 0 235px;
@@ -667,7 +667,7 @@ export default {
   }
 }
 
-.book-content-view {
+.thing-content-view {
   margin-top: 40px;
   padding-bottom: 50px;
 }
@@ -740,10 +740,10 @@ export default {
     margin-bottom: 12px;
   }
 
-  .books {
+  .things {
     border-top: 1px solid #cedce4;
 
-    .book-item {
+    .thing-item {
       position: relative;
       -webkit-box-flex: 1;
       -ms-flex: 1;
@@ -821,7 +821,7 @@ export default {
   display: flex;
 }
 
-.book-comment {
+.thing-comment {
   .title {
     font-weight: 600;
     font-size: 14px;

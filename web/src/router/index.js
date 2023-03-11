@@ -59,14 +59,14 @@ const constantRouterMap = [
             component: () => import('@/views/index/user/address-view')
           },
           {
-            path: 'wishBookView',
-            name: 'wishBookView',
-            component: () => import('@/views/index/user/wish-book-view')
+            path: 'wishThingView',
+            name: 'wishThingView',
+            component: () => import('@/views/index/user/wish-thing-view')
           },
           {
-            path: 'collectBookView',
-            name: 'collectBookView',
-            component: () => import('@/views/index/user/collect-book-view')
+            path: 'collectThingView',
+            name: 'collectThingView',
+            component: () => import('@/views/index/user/collect-thing-view')
           },
           {
             path: 'orderView',
@@ -135,9 +135,9 @@ const constantRouterMap = [
         component: () => import('@/views/admin/overview')
       },
       {
-        path: 'book',
-        name: 'book',
-        component: () => import('@/views/admin/book')
+        path: 'thing',
+        name: 'thing',
+        component: () => import('@/views/admin/thing')
       },
       {
         path: 'classification',

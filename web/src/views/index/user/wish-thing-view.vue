@@ -4,15 +4,15 @@
     <div role="tablist" class="list-tabs-view flex-view">
     </div>
     <div class="list-content">
-      <div class="collect-book-view">
-        <div class="book-list flex-view">
-          <div class="book-item item-column-3" v-for="(item,index) in wishData" :key="index">
+      <div class="collect-thing-view">
+        <div class="thing-list flex-view">
+          <div class="thing-item item-column-3" v-for="(item,index) in wishData" :key="index">
             <div class="remove" @click="handleRemove(item)">移出</div>
             <div class="img-view" @click="handleClickItem(item)">
               <img :src="item.cover">
             </div>
             <div class="info-view">
-              <h3 class="book-name">{{item.title}}</h3>
+              <h3 class="thing-name">{{item.title}}</h3>
               <p class="authors" v-if="item.author">{{item.author}}（作者)</p>
               <p class="translators" v-if="item.translator">{{item.translator}}（译者）</p>
             </div>
@@ -24,17 +24,17 @@
 </template>
 
 <script>
-import {getWishBookListApi, removeWishUserApi} from '@/api/index/book'
+import {getWishThingListApi, removeWishUserApi} from '@/api/index/thing'
 
 export default {
-  name: 'WishBookView',
+  name: 'WishThingView',
   data () {
     return {
       wishData: []
     }
   },
   mounted () {
-    this.getWishBookList()
+    this.getWishThingList()
   },
   methods: {
     handleClickItem (record) {
@@ -43,16 +43,16 @@ export default {
     },
     handleRemove (record) {
       let username = this.$store.state.user.username
-      removeWishUserApi({username: username, bookId: record.id}).then(res => {
+      removeWishUserApi({username: username, thingId: record.id}).then(res => {
         this.$message.success('移除成功')
-        this.getWishBookList()
+        this.getWishThingList()
       }).catch(err => {
         console.log(err)
       })
     },
-    getWishBookList () {
+    getWishThingList () {
       let username = this.$store.state.user.username
-      getWishBookListApi({username: username}).then(res => {
+      getWishThingListApi({username: username}).then(res => {
         res.data.forEach(item => {
           item.cover = this.$BASE_URL + item.cover
         })
@@ -93,14 +93,14 @@ export default {
   }
 }
 
-.book-list {
+.thing-list {
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   -webkit-box-pack: start;
   -ms-flex-pack: start;
   justify-content: flex-start;
 
-  .book-item {
+  .thing-item {
     position: relative;
     -webkit-box-flex: 1;
     -ms-flex: 1;

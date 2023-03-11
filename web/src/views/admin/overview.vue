@@ -4,15 +4,15 @@
     <div class="main">
       <a-row :gutter="[20,20]">
         <a-col :sm="24" :md="12" :lg="6">
-          <a-card size="small" title="图书总数">
+          <a-card size="small" title="商品总数">
             <a-tag color="blue" slot="extra">总</a-tag>
             <div class="box">
               <div class="box-top">
-                <span class="box-value">{{ data.book_count }}<span class="v-e">本</span></span>
+                <span class="box-value">{{ data.thing_count }}<span class="v-e">种</span></span>
                 <a-icon type="profile" theme="twoTone" style="font-size: 24px;"/>
               </div>
               <div class="box-bottom">
-                <span>本周新增 {{ data.book_week_count }} 本</span>
+                <span>本周新增 {{ data.thing_week_count }} 种</span>
               </div>
             </div>
           </a-card>

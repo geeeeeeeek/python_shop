@@ -2,7 +2,7 @@
   <div class="content">
     <div class="content-left">
       <div class="left-search-item">
-        <h4>图书分类</h4>
+        <h4>商品分类</h4>
         <a-tree :tree-data="cData" :selected-keys="selectedKeys" @select="onSelect" style="min-height: 220px;">
         </a-tree>
       </div>
@@ -42,11 +42,11 @@
         </div>
       </div>
       <a-spin :spinning="loading" style="min-height: 200px;">
-        <div class="pc-book-list flex-view">
-          <div v-for="item in pageData" :key="item.id" @click="handleDetail(item)" class="book-item item-column-3"><!---->
+        <div class="pc-thing-list flex-view">
+          <div v-for="item in pageData" :key="item.id" @click="handleDetail(item)" class="thing-item item-column-3"><!---->
             <div class="img-view">
               <img :src="item.cover"></div>
-            <div class="info-view"><h3 class="book-name">{{ item.title }}</h3>
+            <div class="info-view"><h3 class="thing-name">{{ item.title }}</h3>
               <p class="authors">{{ item.author }}</p>
               <p class="translators" v-if="item.translator">{{ item.translator }}（译者）</p></div>
           </div>
@@ -66,7 +66,7 @@
 <script>
 import {listApi as listClassificationList} from '@/api/index/classification'
 import {listApi as listTagList} from '@/api/index/tag'
-import {listApi as listBookList} from '@/api/index/book'
+import {listApi as listThingList} from '@/api/index/thing'
 
 export default {
   name: 'Content',
@@ -83,7 +83,7 @@ export default {
       selectTabIndex: 0,
       tabUnderLeft: 12,
 
-      bookData: [],
+      thingData: [],
       pageData: [],
 
       page: 1,
@@ -93,7 +93,7 @@ export default {
   },
   mounted () {
     this.initSider()
-    this.getBookList({})
+    this.getThingList({})
   },
   methods: {
     initSider () {
@@ -115,19 +115,19 @@ export default {
       this.selectedKeys = selectedKeys
       console.log(this.selectedKeys[0])
       if (this.selectedKeys.length > 0) {
-        this.getBookList({c: this.getSelectedKey()})
+        this.getThingList({c: this.getSelectedKey()})
       }
       this.selectTagId = -1
     },
     clickTag (index) {
       this.selectedKeys = []
       this.selectTagId = index
-      this.getBookList({tag: this.selectTagId})
+      this.getThingList({tag: this.selectTagId})
     },
     search () {
       const keyword = this.$refs.keyword.value
       console.log(keyword)
-      this.getBookList({'keyword': keyword})
+      this.getThingList({'keyword': keyword})
     },
     // clearSearch () {
     //   this.$refs.keyword.value = ''
@@ -145,7 +145,7 @@ export default {
       } else {
         data['c'] = this.getSelectedKey()
       }
-      this.getBookList(data)
+      this.getThingList(data)
     },
     handleDetail (item) {
       // 跳转新页面
@@ -156,12 +156,12 @@ export default {
     changePage (page) {
       this.page = page
       let start = (this.page - 1) * this.pageSize
-      this.pageData = this.bookData.slice(start, start + this.pageSize)
+      this.pageData = this.thingData.slice(start, start + this.pageSize)
       console.log('第' + this.page + '页')
     },
-    getBookList (data) {
+    getThingList (data) {
       this.loading = true
-      listBookList(data).then(res => {
+      listThingList(data).then(res => {
         this.loading = false
         res.data.forEach((item, index) => {
           if (item.cover) {
@@ -169,8 +169,8 @@ export default {
           }
         })
         console.log(res)
-        this.bookData = res.data
-        this.total = this.bookData.length
+        this.thingData = res.data
+        this.total = this.thingData.length
         this.changePage(1)
       }).catch(err => {
         console.log(err)
@@ -468,11 +468,11 @@ li {
 
   }
 
-  .pc-book-list {
+  .pc-thing-list {
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
 
-    .book-item {
+    .thing-item {
       min-width: 255px;
       max-width: 255px;
       position: relative;

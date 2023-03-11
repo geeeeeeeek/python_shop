@@ -138,7 +138,7 @@ export default {
       const that = this
       this.$confirm({
         title: '确定删除?',
-        content: '该分类下的图书也会被删除！',
+        content: '该分类下的商品也会被删除！',
         onOk () {
           deleteApi({
             ids: record.key
@@ -161,7 +161,7 @@ export default {
       const that = this
       this.$confirm({
         title: '确定删除?',
-        content: '该分类下的图书也会被删除！',
+        content: '该分类下的商品也会被删除！',
         onOk () {
           deleteApi({
             ids: that.selectedRowKeys.join(',')

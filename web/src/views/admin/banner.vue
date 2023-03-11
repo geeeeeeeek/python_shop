@@ -59,7 +59,7 @@ const columns = [
     scopedSlots: { customRender: 'image' }
   },
   {
-    title: '关联图书',
+    title: '关联商品',
     dataIndex: 'title',
     key: 'title',
     align: 'center'

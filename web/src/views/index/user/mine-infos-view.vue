@@ -12,13 +12,13 @@
     </div>
     <div class="counts-view">
       <div class="counts flex-view">
-        <div class="fans-box flex-item" @click="clickMenu('collectBookView')">
+        <div class="fans-box flex-item" @click="clickMenu('collectThingView')">
           <div class="text">收藏</div>
           <div class="num">{{collectCount}}</div>
         </div>
         <div class="split-line">
         </div>
-        <div class="follow-box flex-item" @click="clickMenu('wishBookView')">
+        <div class="follow-box flex-item" @click="clickMenu('wishThingView')">
           <div class="text">心愿单</div>
           <div class="num">{{wishCount}}</div>
         </div>
@@ -42,7 +42,7 @@
 <!--          <span>我的订单</span>-->
 <!--        </div>-->
         <div class="mine-item flex-view" @click="clickMenu('commentView')">
-          <img src="@/assets/images/order-book-icon.svg">
+          <img src="@/assets/images/order-thing-icon.svg">
           <span>我的评论</span>
         </div>
         <div class="mine-item flex-view" @click="clickMenu('addressView')">
@@ -80,7 +80,7 @@
 </template>
 
 <script>
-import {getCollectBookListApi, getWishBookListApi} from '@/api/index/book'
+import {getCollectThingListApi, getWishThingListApi} from '@/api/index/thing'
 
 export default {
   name: 'MineInfosView',
@@ -91,24 +91,24 @@ export default {
     }
   },
   mounted () {
-    this.getCollectBookList()
-    this.getWishBookList()
+    this.getCollectThingList()
+    this.getWishThingList()
   },
   methods: {
     clickMenu (name) {
       this.$router.push({name: name})
     },
-    getCollectBookList () {
+    getCollectThingList () {
       let username = this.$store.state.user.username
-      getCollectBookListApi({username: username}).then(res => {
+      getCollectThingListApi({username: username}).then(res => {
         this.collectCount = res.data.length
       }).catch(err => {
         console.log(err.msg)
       })
     },
-    getWishBookList () {
+    getWishThingList () {
       let username = this.$store.state.user.username
-      getWishBookListApi({username: username}).then(res => {
+      getWishThingListApi({username: username}).then(res => {
         this.wishCount = res.data.length
       }).catch(err => {
         console.log(err.msg)

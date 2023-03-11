@@ -5,9 +5,9 @@
     :rules="rules">
     <a-row :gutter="24">
       <a-col span="24">
-        <a-form-model-item label="图书" prop="book">
-          <a-select placeholder="请选择" allowClear v-model="form.book">
-            <template v-for="item in bookData">
+        <a-form-model-item label="商品" prop="thing">
+          <a-select placeholder="请选择" allowClear v-model="form.thing">
+            <template v-for="item in thingData">
               <a-select-option :key="item.id" :value="item.id">{{item.title}}</a-select-option>
             </template>
           </a-select>
@@ -54,7 +54,7 @@ export default {
       form: {
       },
       rules: {
-        book: [{ required: true, message: '请选择图书', trigger: 'change' }]
+        thing: [{ required: true, message: '请选择商品', trigger: 'change' }]
       }
     }
   },

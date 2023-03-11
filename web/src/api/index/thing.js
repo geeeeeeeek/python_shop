@@ -4,15 +4,15 @@
 import axios from '@/utils/request.js'
 
 const api = {
-  listApi: '/myapp/index/book/list',
-  detailApi: '/myapp/index/book/detail',
-  addWishUserApi: '/myapp/index/book/addWishUser',
-  removeWishUserApi: '/myapp/index/book/removeWishUser',
-  getWishBookListApi: '/myapp/index/book/getWishBookList',
-  addCollectUserApi: '/myapp/index/book/addCollectUser',
-  removeCollectUserApi: '/myapp/index/book/removeCollectUser',
-  getCollectBookListApi: '/myapp/index/book/getCollectBookList',
-  // increaseRecommendCountApi: '/myapp/index/book/increaseRecommendCount',
+  listApi: '/myapp/index/thing/list',
+  detailApi: '/myapp/index/thing/detail',
+  addWishUserApi: '/myapp/index/thing/addWishUser',
+  removeWishUserApi: '/myapp/index/thing/removeWishUser',
+  getWishThingListApi: '/myapp/index/thing/getWishThingList',
+  addCollectUserApi: '/myapp/index/thing/addCollectUser',
+  removeCollectUserApi: '/myapp/index/thing/removeCollectUser',
+  getCollectThingListApi: '/myapp/index/thing/getCollectThingList',
+  // increaseRecommendCountApi: '/myapp/index/thing/increaseRecommendCount',
 }
 
 /**
@@ -52,9 +52,9 @@ export const removeWishUserApi = function (data) {
   })
 }
 
-export const getWishBookListApi = function (params) {
+export const getWishThingListApi = function (params) {
   return axios({
-    url: api.getWishBookListApi,
+    url: api.getWishThingListApi,
     method: 'get',
     params: params
   })
@@ -76,9 +76,9 @@ export const removeCollectUserApi = function (data) {
   })
 }
 
-export const getCollectBookListApi = function (params) {
+export const getCollectThingListApi = function (params) {
   return axios({
-    url: api.getCollectBookListApi,
+    url: api.getCollectThingListApi,
     method: 'get',
     params: params
   })

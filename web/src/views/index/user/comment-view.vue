@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     handleClickTitle (record) {
-      let text = this.$router.resolve({name: 'detail', query: {id: record.book}})
+      let text = this.$router.resolve({name: 'detail', query: {id: record.thing}})
       window.open(text.href, '_blank')
     },
     getCommentList () {

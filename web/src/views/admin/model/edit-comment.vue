@@ -10,8 +10,8 @@
         </a-form-model-item>
       </a-col>
       <a-col span="24">
-        <a-form-model-item label="图书id" prop="book">
-          <a-input placeholder="请输入" v-model="form.book"></a-input>
+        <a-form-model-item label="图书id" prop="thing">
+          <a-input placeholder="请输入" v-model="form.thing"></a-input>
         </a-form-model-item>
       </a-col>
       <a-col span="24">

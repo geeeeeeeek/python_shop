@@ -41,8 +41,8 @@
 </template>
 
 <script>
-import {listApi, deleteApi, createApi} from '@/api/admin/book'
-import EditBook from '@/views/admin/model/edit-book'
+import {listApi, deleteApi, createApi} from '@/api/admin/thing'
+import EditThing from '@/views/admin/model/edit-thing'
 
 const columns = [
   {
@@ -52,14 +52,9 @@ const columns = [
     width: 60
   },
   {
-    title: '书名',
+    title: '名称',
     dataIndex: 'title',
     key: 'title'
-  },
-  {
-    title: '原书名',
-    dataIndex: 'original_title',
-    key: 'original_title'
   },
   // {
   //   title: '封面',
@@ -68,39 +63,9 @@ const columns = [
   //   scopedSlots: { customRender: 'cover' }
   // },
   {
-    title: '作者',
-    dataIndex: 'author',
-    key: 'author'
-  },
-  {
-    title: '译者',
-    dataIndex: 'translator',
-    key: 'translator'
-  },
-  {
-    title: '出版社',
-    dataIndex: 'press',
-    key: 'press'
-  },
-  {
-    title: '页数',
-    dataIndex: 'page_count',
-    key: 'page_count'
-  },
-  {
     title: '价格',
     dataIndex: 'price',
     key: 'price'
-  },
-  {
-    title: 'ISBN',
-    dataIndex: 'isbn',
-    key: 'isbn'
-  },
-  {
-    title: '出版日期',
-    dataIndex: 'pub_date',
-    key: 'pub_date'
   },
   {
     title: '状态',
@@ -112,11 +77,6 @@ const columns = [
     title: '库存',
     dataIndex: 'repertory',
     key: 'repertory'
-  },
-  {
-    title: '装饰',
-    dataIndex: 'layout',
-    key: 'layout'
   },
   {
     title: '简介',
@@ -135,7 +95,7 @@ const columns = [
 ]
 
 export default {
-  name: 'Book',
+  name: 'Thing',
   data () {
     return {
       loading: false,
@@ -204,7 +164,7 @@ export default {
     // },
     handleAdd () {
       this.$dialog(
-        EditBook,
+        EditThing,
         {
           on: {
             ok: () => {
@@ -214,7 +174,7 @@ export default {
           }
         },
         {
-          title: '新增图书',
+          title: '新增商品',
           width: '640px',
           centered: true,
           bodyStyle: {
@@ -226,9 +186,9 @@ export default {
     },
     handleEdit (record) {
       this.$dialog(
-        EditBook,
+        EditThing,
         {
-          book: Object.assign({}, record),
+          thing: Object.assign({}, record),
           modifyFlag: true,
           on: {
             ok: () => {
@@ -237,7 +197,7 @@ export default {
           }
         },
         {
-          title: '编辑图书',
+          title: '编辑商品',
           width: '640px',
           centered: true,
           bodyStyle: {

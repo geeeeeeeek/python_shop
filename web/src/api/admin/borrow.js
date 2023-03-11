@@ -6,7 +6,7 @@ import axios from '@/utils/request.js'
 const api = {
   listApi: '/myapp/admin/borrow/list',
   createApi: '/myapp/admin/borrow/create',
-  returnBookApi: '/myapp/admin/borrow/return_book',
+  returnThingApi: '/myapp/admin/borrow/return_thing',
   deleteApi: '/myapp/admin/borrow/delete',
   updateApi: '/myapp/admin/borrow/update',
   delayApi: '/myapp/admin/borrow/delay'
@@ -64,9 +64,9 @@ export const updateApi = function (params, data) {
 /**
  * 还书
  */
-export const returnBookApi = function (params, data) {
+export const returnThingApi = function (params, data) {
   return axios({
-    url: api.returnBookApi,
+    url: api.returnThingApi,
     method: 'post',
     headers: {
       'Content-Type': 'multipart/form-data;charset=utf-8'

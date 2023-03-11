@@ -5,13 +5,8 @@
     :rules="rules">
     <a-row :gutter="24">
       <a-col span="12">
-        <a-form-model-item label="书名" prop="title">
+        <a-form-model-item label="商品名称" prop="title">
           <a-input placeholder="请输入" v-model="form.title"></a-input>
-        </a-form-model-item>
-      </a-col>
-      <a-col span="12">
-        <a-form-model-item label="原作名">
-          <a-input placeholder="请输入" v-model="form.original_title"></a-input>
         </a-form-model-item>
       </a-col>
       <a-col span="12">
@@ -72,42 +67,8 @@
         </a-form-model-item>
       </a-col>
       <a-col span="12">
-        <a-form-model-item label="作者">
-          <a-input placeholder="请输入" v-model="form.author"></a-input>
-        </a-form-model-item>
-      </a-col>
-      <a-col span="12">
-        <a-form-model-item label="译者">
-          <a-input placeholder="请输入" v-model="form.translator"></a-input>
-        </a-form-model-item>
-      </a-col>
-      <a-col span="12">
-        <a-form-model-item label="ISBN">
-          <a-input placeholder="请输入" v-model="form.isbn"></a-input>
-        </a-form-model-item>
-      </a-col>
-      <a-col span="12">
         <a-form-model-item label="定价">
           <a-input placeholder="请输入" v-model="form.price"></a-input>
-        </a-form-model-item>
-      </a-col>
-      <a-col span="12">
-        <a-form-model-item label="出版社">
-          <a-input placeholder="请输入" v-model="form.press"></a-input>
-        </a-form-model-item>
-      </a-col>
-      <a-col span="12">
-        <a-form-model-item label="出版日期">
-          <a-date-picker style="width:100%;" placeholder="请输入" v-model="form.pub_date"/>
-        </a-form-model-item>
-      </a-col>
-      <a-col span="12">
-        <a-form-model-item label="装帧">
-          <a-select placeholder="请选择" allowClear v-model="form.layout">
-            <a-select-option key="平装" value="平装">平装</a-select-option>
-            <a-select-option key="精装" value="精装">精装</a-select-option>
-            <a-select-option key="其它" value="其它">其它</a-select-option>
-          </a-select>
         </a-form-model-item>
       </a-col>
       <a-col span="12">
@@ -116,11 +77,6 @@
             <a-select-option key="0" value="0">上架</a-select-option>
             <a-select-option key="1" value="1">下架</a-select-option>
           </a-select>
-        </a-form-model-item>
-      </a-col>
-      <a-col span="12">
-        <a-form-model-item label="页数" prop="page_count">
-          <a-input-number placeholder="请输入" :min="0" v-model="form.page_count" style="width: 100%;"></a-input-number>
         </a-form-model-item>
       </a-col>
       <a-col span="12">
@@ -133,18 +89,18 @@
 </template>
 
 <script>
-import {createApi, updateApi} from '@/api/admin/book'
+import {createApi, updateApi} from '@/api/admin/thing'
 import {listApi as listClassificationApi} from '@/api/admin/classification'
 import {listApi as listTagApi} from '@/api/admin/tag'
 
 export default {
-  name: 'EditBook',
+  name: 'EditThing',
   props: {
     modifyFlag: {
       type: Boolean,
       default: () => false
     },
-    book: {
+    thing: {
       type: Object,
       default: () => {}
     }
@@ -156,9 +112,8 @@ export default {
         layout: undefined
       },
       rules: {
-        title: [{ required: true, message: '请输入书名', trigger: 'change' }],
+        title: [{ required: true, message: '请输入名称', trigger: 'change' }],
         classification: [{ required: true, message: '请选择分类', trigger: 'change' }],
-        page_count: [{ required: true, message: '请输入页数', trigger: 'change' }],
         repertory: [{ required: true, message: '请输入库存', trigger: 'change' }]
       },
       cData: [],
@@ -167,12 +122,11 @@ export default {
   },
   created () {
     if (this.modifyFlag) {
-      this.form = this.book
+      this.form = this.thing
       this.coverUrl = this.form.cover
       this.form.cover = undefined
-      this.form.layout = this.book.layout || undefined
-      this.form.classification = this.book.classification || undefined
-      this.form.tag = this.book.tag || undefined
+      this.form.classification = this.thing.classification || undefined
+      this.form.tag = this.thing.tag || undefined
     }
     this.getCDataList()
     this.getTagDataList()
@@ -191,7 +145,6 @@ export default {
         console.log(this.form)
         const formData = new FormData()
         formData.append('title', this.form.title)
-        formData.append('original_title', this.form.original_title || '')
         if (this.form.classification) {
           formData.append('classification', this.form.classification)
         }
@@ -204,32 +157,19 @@ export default {
           formData.append('cover', this.form.cover)
         }
         formData.append('description', this.form.description || '')
-        formData.append('author', this.form.author || '')
-        formData.append('translator', this.form.translator || '')
-        formData.append('isbn', this.form.isbn || '')
         formData.append('price', this.form.price || '')
-        formData.append('press', this.form.press || '')
-        if (this.form.layout) {
-          formData.append('layout', this.form.layout)
-        }
-        if (this.form.page_count) {
-          formData.append('page_count', this.form.page_count)
-        }
         if (this.form.repertory >= 0) {
           formData.append('repertory', this.form.repertory)
         }
         if (this.form.status) {
           formData.append('status', this.form.status)
         }
-        if (this.form.pub_date) {
-          formData.append('pub_date', this.$moment(this.form.pub_date).format('YYYY-MM-DD'))
-        }
         this.$refs.myform.validate(valid => {
           if (valid) {
             if (this.modifyFlag) {
               // 修改接口
               updateApi({
-                id: this.book.id
+                id: this.thing.id
               }, formData).then(res => {
                 console.log(res)
                 resolve(true)

@@ -27,9 +27,9 @@
         </a-form-model-item>
       </a-col>
       <a-col span="24">
-        <a-form-model-item label="关联图书" prop="book">
-          <a-select placeholder="请选择" allowClear v-model="form.book">
-            <template v-for="item in bookData">
+        <a-form-model-item label="关联图书" prop="thing">
+          <a-select placeholder="请选择" allowClear v-model="form.thing">
+            <template v-for="item in thingData">
               <a-select-option :key="item.id" :value="item.id">{{item.title}}</a-select-option>
             </template>
           </a-select>
@@ -41,7 +41,7 @@
 
 <script>
 import {createApi, updateApi} from '@/api/admin/banner'
-import {listApi as listBookApi} from '@/api/admin/book'
+import {listApi as listThingApi} from '@/api/admin/thing'
 
 export default {
   name: 'EditBanner',
@@ -57,13 +57,13 @@ export default {
   },
   data () {
     return {
-      book: undefined,
+      thing: undefined,
       imageUrl: undefined,
       form: {
       },
-      bookData: [],
+      thingData: [],
       rules: {
-        book: [{ required: true, message: '请选择图书', trigger: 'change' }]
+        thing: [{ required: true, message: '请选择图书', trigger: 'change' }]
       }
     }
   },
@@ -73,7 +73,7 @@ export default {
       this.imageUrl = this.banner.image
       this.form.image = undefined
     }
-    this.getBookList()
+    this.getThingList()
   },
   methods: {
     beforeUpload (file) {
@@ -91,8 +91,8 @@ export default {
         if (this.form.image) {
           formData.append('image', this.form.image)
         }
-        if (this.form.book) {
-          formData.append('book', this.form.book)
+        if (this.form.thing) {
+          formData.append('thing', this.form.thing)
         }
         this.$refs.myform.validate(valid => {
           if (valid) {
@@ -121,9 +121,9 @@ export default {
         })
       })
     },
-    getBookList () {
-      listBookApi().then(res => {
-        this.bookData = res.data
+    getThingList () {
+      listThingApi().then(res => {
+        this.thingData = res.data
       }).catch(err => {
         this.$message.error(err.msg || '查询失败')
       })

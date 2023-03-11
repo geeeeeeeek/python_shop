@@ -6,7 +6,7 @@ import axios from '@/utils/request.js'
 const api = {
   listApi: '/myapp/index/borrow/list',
   createApi: '/myapp/index/borrow/create',
-  returnBookApi: '/myapp/index/borrow/return_book',
+  returnThingApi: '/myapp/index/borrow/return_thing',
   delayApi: '/myapp/index/borrow/delay'
 }
 
@@ -38,9 +38,9 @@ export const createApi = function (data) {
 /**
  * 还书
  */
-export const returnBookApi = function (params, data) {
+export const returnThingApi = function (params, data) {
   return axios({
-    url: api.returnBookApi,
+    url: api.returnThingApi,
     method: 'post',
     headers: {
       'Content-Type': 'multipart/form-data;charset=utf-8'

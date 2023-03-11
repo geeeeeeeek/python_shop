@@ -9,16 +9,16 @@
       </div>
     </div>
     <div class="content-list">
-      <div class="book-list">
+      <div class="thing-list">
 
         <a-spin :spinning="loading" style="min-height: 200px;">
-        <div class="books flex-view">
-            <div class="book-item item-column-4" v-for="item in pageData" @click="handleDetail(item)">
+        <div class="things flex-view">
+            <div class="thing-item item-column-4" v-for="item in pageData" @click="handleDetail(item)">
               <div class="img-view">
                 <img :src="item.cover" lazy="loaded">
               </div>
               <div class="info-view">
-                <h3 class="book-name">{{item.title}}</h3>
+                <h3 class="thing-name">{{item.title}}</h3>
                 <p class="authors" v-if="item.author">{{item.author}}（作者）</p>
                 <p class="translators" v-if="item.translator">{{item.translator}}（译者）</p>
               </div>
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import {listApi as listBookList} from '@/api/index/book'
+import {listApi as listThingList} from '@/api/index/thing'
 
 export default {
   name: 'SearchContentView',
@@ -42,7 +42,7 @@ export default {
     return {
       loading: false,
       keyword: '',
-      bookData: [],
+      thingData: [],
       pageData: [],
 
       page: 1,
@@ -63,13 +63,13 @@ export default {
   methods: {
     search () {
       this.keyword = this.$route.query.keyword.trim()
-      this.getBookList({'keyword': this.keyword})
+      this.getThingList({'keyword': this.keyword})
     },
     // 分页事件
     changePage (page) {
       this.page = page
       let start = (this.page - 1) * this.pageSize
-      this.pageData = this.bookData.slice(start, start + this.pageSize)
+      this.pageData = this.thingData.slice(start, start + this.pageSize)
       console.log('第' + this.page + '页')
     },
     handleDetail (item) {
@@ -77,16 +77,16 @@ export default {
       let text = this.$router.resolve({name: 'detail', query: {id: item.id}})
       window.open(text.href, '_blank')
     },
-    getBookList (data) {
+    getThingList (data) {
       this.loading = true
-      listBookList(data).then(res => {
+      listThingList(data).then(res => {
         res.data.forEach((item, index) => {
           if (item.cover) {
             item.cover = this.$BASE_URL + item.cover
           }
         })
-        this.bookData = res.data
-        this.total = this.bookData.length
+        this.thingData = res.data
+        this.total = this.thingData.length
         this.changePage(1)
         this.loading = false
       }).catch(err => {
@@ -140,7 +140,7 @@ export default {
   }
 }
 
-.books {
+.things {
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
 }
@@ -149,7 +149,7 @@ export default {
   display: flex;
 }
 
-.book-item {
+.thing-item {
   position: relative;
   -webkit-box-flex: 1;
   -ms-flex: 1;
