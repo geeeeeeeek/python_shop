@@ -13,7 +13,7 @@ from rest_framework.decorators import api_view, authentication_classes
 from myapp import utils
 from myapp.handler import APIResponse
 
-from myapp.models import Thing, Borrow
+from myapp.models import Thing, Order
 from myapp.utils import dict_fetchall
 from myapp.auth.authentication import AdminTokenAuthtication
 
@@ -26,21 +26,21 @@ def count(request):
         thing_count = Thing.objects.all().count()
         # print(utils.get_monday())
         thing_week_count = Thing.objects.filter(create_time__gte=utils.get_monday()).count()
-        borrow_count = Borrow.objects.filter(status='1').count()
-        return_count = Borrow.objects.filter(status='2').count()
-        overdue_count = Borrow.objects.filter(expect_time__lt=now).count()
+        order_count = Order.objects.filter(status='1').count()
+        return_count = Order.objects.filter(status='2').count()
+        overdue_count = Order.objects.filter(expect_time__lt=now).count()
 
         # 借书人数(sql语句)
-        borrow_person_count = 0
-        sql_str = "select user_id from b_borrow where status='1' group by user_id;"
+        order_person_count = 0
+        sql_str = "select user_id from b_order where status='1' group by user_id;"
         with connection.cursor() as cursor:
             cursor.execute(sql_str)
             sql_data = dict_fetchall(cursor)
-            borrow_person_count = len(sql_data)
+            order_person_count = len(sql_data)
 
         # 还书人数(sql语句)
         return_person_count = 0
-        sql_str = "select user_id from b_borrow where status='2' group by user_id;"
+        sql_str = "select user_id from b_order where status='2' group by user_id;"
         with connection.cursor() as cursor:
             cursor.execute(sql_str)
             sql_data = dict_fetchall(cursor)
@@ -49,18 +49,18 @@ def count(request):
         # 逾期人数(sql语句)
         overdue_person_count = 0
         now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
-        sql_str = "select user_id from b_borrow where expect_time < '" + now + "' and status='1' group by user_id;"
+        sql_str = "select user_id from b_order where expect_time < '" + now + "' and status='1' group by user_id;"
         with connection.cursor() as cursor:
             cursor.execute(sql_str)
             sql_data = dict_fetchall(cursor)
             overdue_person_count = len(sql_data)
 
         # 统计借阅排名(sql语句)
-        sql_str = "select A.thing_id, B.title, count(A.thing_id) as count from b_borrow A join b_thing B on " \
+        sql_str = "select A.thing_id, B.title, count(A.thing_id) as count from b_order A join b_thing B on " \
                   "A.thing_id=B.id group by A.thing_id order by count desc; "
         with connection.cursor() as cursor:
             cursor.execute(sql_str)
-            borrow_rank_data = dict_fetchall(cursor)
+            order_rank_data = dict_fetchall(cursor)
 
         # 统计分类比例(sql语句)
         sql_str = "select B.title, count(B.title) as count from b_thing A join B_classification B on " \
@@ -90,13 +90,13 @@ def count(request):
         data = {
             'thing_count': thing_count,
             'thing_week_count': thing_week_count,
-            'borrow_count': borrow_count,
-            'borrow_person_count': borrow_person_count,
+            'order_count': order_count,
+            'order_person_count': order_person_count,
             'return_count': return_count,
             'return_person_count': return_person_count,
             'overdue_count': overdue_count,
             'overdue_person_count': overdue_person_count,
-            'borrow_rank_data': borrow_rank_data,
+            'order_rank_data': order_rank_data,
             'classification_rank_data': classification_rank_data,
             'visit_data': visit_data
         }

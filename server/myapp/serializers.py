@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from myapp.models import Thing, Classification, Tag, User, Comment, Record, LoginLog, Borrow, BorrowLog, OpLog, Banner, \
+from myapp.models import Thing, Classification, Tag, User, Comment, Record, LoginLog, Order, OrderLog, OpLog, Banner, \
     Ad, Notice, ErrorLog, Address
 
 
@@ -102,23 +102,24 @@ class ErrorLogSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class BorrowSerializer(serializers.ModelSerializer):
-    borrow_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', required=False)
+class OrderSerializer(serializers.ModelSerializer):
+    order_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', required=False)
     expect_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', required=False)
     return_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', required=False)
     # extra
     username = serializers.ReadOnlyField(source='user.username')
     title = serializers.ReadOnlyField(source='thing.title')
+    price = serializers.ReadOnlyField(source='thing.price')
     cover = serializers.FileField(source='thing.cover', required=False)
 
     class Meta:
-        model = Borrow
+        model = Order
         fields = '__all__'
 
 
-class BorrowLogSerializer(serializers.ModelSerializer):
+class OrderLogSerializer(serializers.ModelSerializer):
     class Meta:
-        model = BorrowLog
+        model = OrderLog
         fields = '__all__'
 
 

@@ -148,29 +148,33 @@ class ErrorLog(models.Model):
         db_table = "b_error_log"
 
 
-class Borrow(models.Model):
+class Order(models.Model):
     id = models.BigAutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='user_borrow')
-    thing = models.ForeignKey(Thing, on_delete=models.CASCADE, null=True, related_name='thing_borrow')
-    status = models.CharField(max_length=2, blank=True, null=True)  # 1借出 2已还
-    borrow_time = models.DateTimeField(auto_now_add=True, null=True)
-    expect_time = models.DateTimeField(null=True)  # 应还时间
-    return_time = models.DateTimeField(null=True)
-    delayed = models.BooleanField(blank=True, null=True, default=False)  # 是否延期
+    order_number = models.CharField(max_length=13, blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='user_order')
+    thing = models.ForeignKey(Thing, on_delete=models.CASCADE, null=True, related_name='thing_order')
+    count = models.IntegerField(default=0)
+    status = models.CharField(max_length=2, blank=True, null=True)  # 1未支付 2已支付 7订单取消
+    order_time = models.DateTimeField(auto_now_add=True, null=True)
+    pay_time = models.DateTimeField(null=True)
+    receiver_name = models.CharField(max_length=20, blank=True, null=True)
+    receiver_address = models.CharField(max_length=50, blank=True, null=True)
+    receiver_phone = models.CharField(max_length=20, blank=True, null=True)
+    remark = models.CharField(max_length=30, blank=True, null=True)
 
     class Meta:
-        db_table = "b_borrow"
+        db_table = "b_order"
 
 
-class BorrowLog(models.Model):
+class OrderLog(models.Model):
     id = models.BigAutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='user_borrow_log')
-    thing = models.ForeignKey(Thing, on_delete=models.CASCADE, null=True, related_name='thing_borrow_log')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='user_order_log')
+    thing = models.ForeignKey(Thing, on_delete=models.CASCADE, null=True, related_name='thing_order_log')
     action = models.CharField(max_length=2, blank=True, null=True)
     log_time = models.DateTimeField(auto_now_add=True, null=True)
 
     class Meta:
-        db_table = "b_borrow_log"
+        db_table = "b_order_log"
 
 
 class Banner(models.Model):

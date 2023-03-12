@@ -5,18 +5,18 @@ from rest_framework.decorators import api_view, authentication_classes
 
 from myapp.auth.authentication import TokenAuthtication
 from myapp.handler import APIResponse
-from myapp.models import Borrow, Thing
-from myapp.serializers import BorrowSerializer
+from myapp.models import Order, Thing
+from myapp.serializers import OrderSerializer
 
 
 @api_view(['GET'])
 def list_api(request):
     if request.method == 'GET':
         userId = request.GET.get('userId', -1)
-        borrowStatus = request.GET.get('borrowStatus', '')
+        orderStatus = request.GET.get('orderStatus', '')
 
-        borrows = Borrow.objects.all().filter(user=userId).filter(status__contains=borrowStatus).order_by('-borrow_time')
-        serializer = BorrowSerializer(borrows, many=True)
+        orders = Order.objects.all().filter(user=userId).filter(status__contains=orderStatus).order_by('-order_time')
+        serializer = OrderSerializer(orders, many=True)
         return APIResponse(code=0, msg='查询成功', data=serializer.data)
 
 
@@ -35,8 +35,8 @@ def create(request):
     if thing.repertory <= 0:
         return APIResponse(code=1, msg='库存不足')
 
-    borrows = Borrow.objects.filter(thing=data['thing']).filter(user=data['user']).filter(status='1')
-    if len(borrows) > 0:
+    orders = Order.objects.filter(thing=data['thing']).filter(user=data['user']).filter(status='1')
+    if len(orders) > 0:
         return APIResponse(code=1, msg='您已经借过该书了')
 
     create_time = datetime.datetime.now()
@@ -45,7 +45,7 @@ def create(request):
     data['delayed'] = False
     data['create_time'] = create_time
     data['expect_time'] = create_time + datetime.timedelta(days=60)
-    serializer = BorrowSerializer(data=data)
+    serializer = OrderSerializer(data=data)
     if serializer.is_valid():
         serializer.save()
         # 减库存
@@ -60,20 +60,20 @@ def create(request):
 
 @api_view(['POST'])
 @authentication_classes([TokenAuthtication])
-def return_thing(request):
+def cancel_order(request):
     """
-    还书
+    cancal
     """
     try:
         pk = request.GET.get('id', -1)
-        borrow = Borrow.objects.get(pk=pk)
-    except Borrow.DoesNotExist:
+        order = Order.objects.get(pk=pk)
+    except Order.DoesNotExist:
         return APIResponse(code=1, msg='对象不存在')
 
     data = {
         'status': 2
     }
-    serializer = BorrowSerializer(borrow, data=data)
+    serializer = OrderSerializer(order, data=data)
     if serializer.is_valid():
         serializer.save()
         # 加库存
@@ -83,36 +83,10 @@ def return_thing(request):
         thing.save()
 
         # 加积分
-        borrow.user.score = borrow.user.score + 1
-        borrow.user.save()
+        order.user.score = order.user.score + 1
+        order.user.save()
 
         return APIResponse(code=0, msg='还书成功', data=serializer.data)
     else:
         print(serializer.errors)
         return APIResponse(code=1, msg='更新失败')
-
-
-@api_view(['POST'])
-@authentication_classes([TokenAuthtication])
-def delay(request):
-
-    try:
-        pk = request.GET.get('id', -1)
-        borrow = Borrow.objects.get(pk=pk)
-    except Borrow.DoesNotExist:
-        return APIResponse(code=1, msg='对象不存在')
-
-    if borrow.delayed:
-        return APIResponse(code=1, msg='已超最大延期次数')
-    else:
-        data = {
-            "delayed": True,
-            "expect_time": borrow.expect_time + datetime.timedelta(days=30)
-        }
-        serializer = BorrowSerializer(borrow, data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return APIResponse(code=0, msg='延期成功', data=serializer.data)
-        else:
-            print(serializer.errors)
-            return APIResponse(code=1, msg='延期失败')

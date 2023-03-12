@@ -63,8 +63,8 @@ export default {
           title: '总览'
         },
         {
-          key: '/admin/borrow',
-          title: '借阅管理'
+          key: '/admin/order',
+          title: '订单管理'
         },
         {
           key: '/admin/thing',

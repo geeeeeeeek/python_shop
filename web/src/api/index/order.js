@@ -4,22 +4,20 @@
 import axios from '@/utils/request.js'
 
 const api = {
-  listApi: '/myapp/admin/borrow/list',
-  createApi: '/myapp/admin/borrow/create',
-  returnThingApi: '/myapp/admin/borrow/return_thing',
-  deleteApi: '/myapp/admin/borrow/delete',
-  updateApi: '/myapp/admin/borrow/update',
-  delayApi: '/myapp/admin/borrow/delay'
+  listApi: '/myapp/index/order/list',
+  createApi: '/myapp/index/order/create',
+  cancelOrderApi: '/myapp/index/order/cancel_order',
+  delayApi: '/myapp/index/order/delay'
 }
 
 /**
  * 列表
  */
-export const listApi = function (data) {
+export const listApi = function (params) {
   return axios({
     url: api.listApi,
     method: 'get',
-    params: data
+    params: params
   })
 }
 
@@ -38,35 +36,11 @@ export const createApi = function (data) {
 }
 
 /**
- * 删除
- */
-export const deleteApi = function (params) {
-  return axios({
-    url: api.deleteApi,
-    method: 'post',
-    params: params
-  })
-}
-/**
- * 更新
- */
-export const updateApi = function (params, data) {
-  return axios({
-    url: api.updateApi,
-    method: 'post',
-    headers: {
-      'Content-Type': 'multipart/form-data;charset=utf-8'
-    },
-    params: params,
-    data: data
-  })
-}
-/**
  * 还书
  */
-export const returnThingApi = function (params, data) {
+export const cancelOrderApi = function (params, data) {
   return axios({
-    url: api.returnThingApi,
+    url: api.cancelOrderApi,
     method: 'post',
     headers: {
       'Content-Type': 'multipart/form-data;charset=utf-8'

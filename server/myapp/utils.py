@@ -1,10 +1,13 @@
 import datetime
 import hashlib
+import time
 
 from rest_framework.views import exception_handler
 
 from myapp.serializers import ErrorLogSerializer
 
+def get_timestamp():
+    return int(round(time.time() * 1000))
 
 def md5value(key):
     input_name = hashlib.md5()

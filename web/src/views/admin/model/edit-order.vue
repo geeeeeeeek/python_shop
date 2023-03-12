@@ -35,16 +35,16 @@
 </template>
 
 <script>
-import {createApi, updateApi} from '@/api/admin/borrow'
+import {createApi, updateApi} from '@/api/admin/order'
 
 export default {
-  name: 'EditBorrow',
+  name: 'EditOrder',
   props: {
     modifyFlag: {
       type: Boolean,
       default: () => false
     },
-    borrow: {
+    order: {
       type: Object,
       default: () => {}
     }

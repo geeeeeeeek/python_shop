@@ -4,20 +4,22 @@
 import axios from '@/utils/request.js'
 
 const api = {
-  listApi: '/myapp/index/borrow/list',
-  createApi: '/myapp/index/borrow/create',
-  returnThingApi: '/myapp/index/borrow/return_thing',
-  delayApi: '/myapp/index/borrow/delay'
+  listApi: '/myapp/admin/order/list',
+  createApi: '/myapp/admin/order/create',
+  cancelOrderApi: '/myapp/admin/order/cancel_order',
+  deleteApi: '/myapp/admin/order/delete',
+  updateApi: '/myapp/admin/order/update',
+  delayApi: '/myapp/admin/order/delay'
 }
 
 /**
  * 列表
  */
-export const listApi = function (params) {
+export const listApi = function (data) {
   return axios({
     url: api.listApi,
     method: 'get',
-    params: params
+    params: data
   })
 }
 
@@ -36,17 +38,40 @@ export const createApi = function (data) {
 }
 
 /**
- * 还书
+ * 删除
  */
-export const returnThingApi = function (params, data) {
+export const deleteApi = function (params) {
   return axios({
-    url: api.returnThingApi,
+    url: api.deleteApi,
+    method: 'post',
+    params: params
+  })
+}
+/**
+ * 更新
+ */
+export const updateApi = function (params, data) {
+  return axios({
+    url: api.updateApi,
     method: 'post',
     headers: {
       'Content-Type': 'multipart/form-data;charset=utf-8'
     },
     params: params,
     data: data
+  })
+}
+/**
+ * 取消
+ */
+export const cancelOrderApi = function (params) {
+  return axios({
+    url: api.cancelOrderApi,
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data;charset=utf-8'
+    },
+    params: params
   })
 }
 /**

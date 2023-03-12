@@ -43,6 +43,16 @@ const constantRouterMap = [
         component: () => import('@/views/index/detail')
       },
       {
+        path: 'confirm',
+        name: 'confirm',
+        component: () => import('@/views/index/confirm')
+      },
+      {
+        path: 'pay',
+        name: 'pay',
+        component: () => import('@/views/index/pay')
+      },
+      {
         path: 'search',
         name: 'search',
         component: () => import('@/views/index/search')
@@ -71,12 +81,12 @@ const constantRouterMap = [
           {
             path: 'orderView',
             name: 'orderView',
-            component: () => import('@/views/index/user/order-view')
+            component: () => import('@/views/index/user/order-view1')
           },
           {
-            path: 'borrowView',
-            name: 'borrowView',
-            component: () => import('@/views/index/user/borrow-view')
+            path: 'orderView',
+            name: 'orderView',
+            component: () => import('@/views/index/user/order-view1')
           },
           {
             path: 'userInfoEditView',
@@ -185,9 +195,9 @@ const constantRouterMap = [
         component: () => import('@/views/admin/comment')
       },
       {
-        path: 'borrow',
-        name: 'borrow',
-        component: () => import('@/views/admin/borrow')
+        path: 'order',
+        name: 'order',
+        component: () => import('@/views/admin/order')
       },
       {
         path: 'user',

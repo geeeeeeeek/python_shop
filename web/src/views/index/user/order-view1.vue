@@ -1,35 +1,26 @@
 <template>
   <div class="content-list">
-    <div class="list-title">我的借阅</div>
+    <div class="list-title">我的订单</div>
     <a-tabs default-active-key="1" @change="onTabChange">
       <a-tab-pane key="1" tab="全部">
       </a-tab-pane>
-      <a-tab-pane key="2" tab="在借">
+      <a-tab-pane key="2" tab="待付款">
       </a-tab-pane>
-      <a-tab-pane key="3" tab="已还">
+      <a-tab-pane key="3" tab="已支付">
       </a-tab-pane>
     </a-tabs>
-    <a-spin :spinning="loading" style="min-height: 200px;">
-      <div class="list-content">
-      <div class="order-item-view" v-for="(item, index) in borrowData" :key="index">
+    <div class="list-content">
+      <div class="order-item-view" v-for="(item, index) in orderData" :key="index">
         <div class="header flex-view">
           <div class="left">
-            <span class="text">借阅ID</span>
+            <span class="text">订单号</span>
             <span class="num mg-4">#</span>
-            <span class="num">{{item.id}}</span>
+            <span class="num">{{item.order_number}}</span>
+            <span class="time">{{item.order_time}}</span>
           </div>
           <div class="right">
-            <a-popconfirm
-              v-if="item.status==='1'"
-              title="确定还书？"
-              ok-text="是"
-              cancel-text="否"
-              @confirm="handleReturn(item)"
-            >
-              <a-button type="primary" size="small" style="margin-right: 24px;">还书</a-button>
-            </a-popconfirm>
-            <span class="text">状态</span>
-            <span class="state">{{item.status==='1'? '在借':'已还'}}</span>
+            <span class="text">订单状态</span>
+            <span class="state">{{item.status==='1'? '待支付': item.status === '2'? '已支付':'已取消'}}</span>
           </div>
         </div>
         <div class="content flex-view">
@@ -39,88 +30,90 @@
               <div class="detail flex-between flex-view">
                 <div class="flex-between flex-top flex-view">
                   <h2 class="name">{{item.title}}</h2>
-                  <span class="count">1本</span>
+                  <span class="count">x{{item.count}}</span>
                 </div>
                 <div class="flex-between flex-center flex-view">
-                  <span class="type">纸质书</span>
-                  <span class="price"></span>
+                  <span class="type"></span>
+                  <span class="price">¥{{item.price}}</span>
                 </div>
               </div>
             </div>
           </div>
           <div class="right-info">
-            <p class="title">借入时间</p>
-            <p class="name">{{item.borrow_time}}</p>
-            <p class="title">到期时间</p>
-            <p class="text">{{item.expect_time}}
+            <p class="title">收货信息</p>
+            <p class="name">刘德华
             </p>
-            <p class="text"></p>
+            <p class="text mg">北京市东城区xxx小区
+            </p>
+            <p class="title">快递单号</p>
+            <p class="text">123456666
+            </p>
+            <p class="title">备注信息</p>
+            <p class="text">哈哈哈
+            </p>
           </div>
         </div>
         <div class="bottom flex-view">
           <div class="left">
-            <span class="text">共1本</span>
+            <span class="text">共{{item.count}}件商品</span>
             <span class="open" @click="handleDetail(item.thing)">商品详情</span>
+          </div>
+          <div class="right flex-view">
+            <span class="text">总计</span>
+            <span class="num">¥ {{item.price * item.count}}</span>
+            <span class="text">优惠</span>
+            <span class="num">¥0</span>
+            <span class="text">实际支付</span>
+            <span class="money">¥ {{item.price * item.count}}</span>
           </div>
         </div>
       </div>
     </div>
-    </a-spin>
   </div>
 </template>
 
 <script>
-import {listApi} from '@/api/index/borrow'
-import {returnThingApi} from '@/api/index/borrow'
+import {listApi} from '@/api/index/order'
 
 export default {
-  name: 'BorrowView',
+  name: 'OrderView',
   data () {
     return {
-      loading: false,
-      borrowData: [],
-      borrowStatus: ''
+      orderData: ['', '', ''],
+      orderStatus: ''
     }
   },
   mounted () {
-    this.getBorrowList()
+    this.getOrderList()
   },
   methods: {
     onTabChange (key) {
       console.log(key)
       if (key === '1') {
-        this.borrowStatus = ''
+        this.orderStatus = ''
       }
       if (key === '2') {
-        this.borrowStatus = '1'
+        this.orderStatus = '1'
       }
       if (key === '3') {
-        this.borrowStatus = '2'
+        this.orderStatus = '2'
       }
-      this.getBorrowList()
+      this.getOrderList()
     },
-    getBorrowList () {
+    getOrderList () {
       this.loading = true
       let userId = this.$store.state.user.userId
-      listApi({userId: userId, borrowStatus: this.borrowStatus}).then(res => {
+      listApi({userId: userId, orderStatus: this.orderStatus}).then(res => {
         res.data.forEach((item, index) => {
           if (item.cover) {
             item.cover = this.$BASE_URL + item.cover
           }
         })
-        this.borrowData = res.data
+        this.orderData = res.data
         this.loading = false
       }).catch(err => {
         console.log(err)
         this.loading = false
-      })
-    },
-    handleReturn (item) {
-      returnThingApi({id: item.id}, {thing: item.thing}).then(res => {
-        this.getBorrowList()
-        this.$message.success('还书成功')
-      }).catch(err => {
-        console.log(err)
       })
     },
     handleDetail (thingId) {

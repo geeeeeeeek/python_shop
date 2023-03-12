@@ -2,7 +2,8 @@
   <div class="page-view">
     <div class="table-operation">
       <a-space>
-<!--        <a-button type="primary" @click="handleAdd">模拟借书</a-button>-->
+        <a-button type="primary" @click="handleMockAdd">模拟新增</a-button>
+        <a-button @click="handleBatchDelete">批量删除</a-button>
       </a-space>
     </div>
     <div class="table-wrap" ref="tableWrap">
@@ -26,13 +27,13 @@
       >
         <span slot="status" slot-scope="text">
           <a-tag :color="text === '1'? '#2db7f5':'#87d068'">
-            {{text === '1'? '借出':'已还'}}
+            {{text === '1'? '待支付': text === '2'? '已支付':'已取消'}}
           </a-tag>
         </span>
         <span slot="operation" class="operation" slot-scope="text, record">
           <a-space :size="16">
-            <a :disabled="record.status === '2'" @click="handleReturn(record)">还书</a>
-            <a :disabled="record.delayed || record.status === '2'" @click="handleDelay(record)">延期</a>
+            <a @click="handleCancel(record)">取消</a>
+            <a @click="handleDelete(record)">删除</a>
           </a-space>
         </span>
       </a-table>
@@ -41,7 +42,7 @@
 </template>
 
 <script>
-import {listApi, createApi, updateApi, returnThingApi, delayApi} from '@/api/admin/borrow'
+import {listApi, createApi, updateApi, cancelOrderApi, delayApi, deleteApi} from '@/api/admin/order'
 
 const columns = [
   {
@@ -60,31 +61,20 @@ const columns = [
     title: '商品',
     dataIndex: 'title',
     key: 'title',
-    align: 'center'
+    align: 'center',
+    customRender: (text) => text ? text.substring(0, 10) + '...' : '--'
   },
   {
     title: '状态',
     dataIndex: 'status',
     key: 'status',
     align: 'center',
-    filters: [
-      {text: '借出', value: '1'},
-      {text: '已还', value: '2'}
-    ],
-    onFilter: (value, record) => record.status.includes(value),
-    // customRender: (text) => text === '1' ? '借出' : '已还'
     scopedSlots: {customRender: 'status'}
   },
   {
-    title: '借出时间',
-    dataIndex: 'borrow_time',
-    key: 'borrow_time',
-    align: 'center'
-  },
-  {
-    title: '应还时间',
-    dataIndex: 'expect_time',
-    key: 'expect_time',
+    title: '订单时间',
+    dataIndex: 'order_time',
+    key: 'order_time',
     align: 'center'
   },
   {
@@ -98,8 +88,8 @@ const columns = [
 ]
 
 export default {
-  name: 'Borrow',
-  data() {
+  name: 'Order',
+  data () {
     return {
       loading: false,
       selectedRowKeys: [],
@@ -110,7 +100,7 @@ export default {
     }
   },
   methods: {
-    getList() {
+    getList () {
       this.loading = true
       listApi().then(res => {
         this.loading = false
@@ -121,53 +111,83 @@ export default {
         console.log(res)
       })
     },
-    rowSelection() {
+    rowSelection () {
       return {
         onChange: (selectedRowKeys, selectedRows) => {
           this.selectedRowKeys = selectedRowKeys
         }
       }
     },
-    // 还书
-    handleReturn(record) {
+    handleMockAdd () {
+      createApi({
+        thing: 1,
+        user: 2,
+        count: 1
+      }).then(res => {
+        this.getList()
+      }).catch(err => {
+
+      })
+    },
+    // 取消
+    handleCancel (record) {
       const that = this
       this.$confirm({
-        title: '确定还书?',
-        onOk() {
-          returnThingApi({
+        title: '确定取消?',
+        onOk () {
+          cancelOrderApi({
             id: record.id
-          }, {
-            thing: record.thing,
-            status: '2'
           }).then(res => {
-            that.$message.success('还书成功')
+            that.$message.success('取消成功')
             that.getList()
           }).catch(err => {
-            that.$message.error(err.msg || '还书失败')
+            that.$message.error(err.msg || '取消失败')
           })
         }
       })
     },
-    // 延期
-    handleDelay (record) {
+    // 删除
+    handleDelete (record) {
       const that = this
       this.$confirm({
-        title: '确定延期?',
-        content: '延期30天',
+        title: '确定删除?',
         onOk () {
-          delayApi({
-            id: record.id
-          }, {}).then(res => {
-            that.$message.success('延期成功')
+          deleteApi({
+            ids: record.id
+          }).then(res => {
+            that.$message.success('删除成功')
             that.getList()
           }).catch(err => {
-            that.$message.error(err.msg || '延期失败')
+            that.$message.error(err.msg || '删除失败')
+          })
+        }
+      })
+    },
+    // 批量删除
+    handleBatchDelete () {
+      console.log(this.selectedRowKeys)
+      if (this.selectedRowKeys.length <= 0) {
+        this.$message.warn('请勾选删除项')
+        return
+      }
+      const that = this
+      this.$confirm({
+        title: '确定删除?',
+        onOk () {
+          deleteApi({
+            ids: that.selectedRowKeys.join(',')
+          }).then(res => {
+            that.$message.success('删除成功')
+            that.selectedRowKeys = []
+            that.getList()
+          }).catch(err => {
+            that.$message.error(err.msg || '删除失败')
           })
         }
       })
     }
   },
-  mounted() {
+  mounted () {
     this.getList()
   }
 }

@@ -23,11 +23,11 @@
             <a-tag color="green" slot="extra">借</a-tag>
             <div class="box">
               <div class="box-top">
-                <span class="box-value">{{ data.borrow_count }}<span class="v-e">本</span></span>
+                <span class="box-value">{{ data.order_count }}<span class="v-e">本</span></span>
                 <a-icon type="carry-out"  theme="twoTone" style="font-size: 24px;"/>
               </div>
               <div class="box-bottom">
-                <span>共 {{data.borrow_person_count}} 人</span>
+                <span>共 {{data.order_person_count}} 人</span>
               </div>
             </div>
           </a-card>
@@ -102,7 +102,7 @@ export default {
       barChart: undefined,
       pieChart: undefined,
       data: {
-        borrow_rank_data: [],
+        order_rank_data: [],
         classification_rank_data: [],
         visit_data: []
       }
@@ -221,7 +221,7 @@ export default {
     initBarChart () {
       let xData = []
       let yData = []
-      this.data.borrow_rank_data.forEach((item, index) => {
+      this.data.order_rank_data.forEach((item, index) => {
         xData.push(item.title)
         yData.push(item.count)
       })

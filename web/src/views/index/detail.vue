@@ -88,7 +88,7 @@
           </div>
 
           <div data-v-04e3a7b4="" class="buy-way hidden-sm">
-            <div class="title">借阅区域</div>
+            <div class="title">操作区域</div>
             <div class="flex-view">
               <div class="buy-way-item" style="">
                 <div class="name">
@@ -98,14 +98,14 @@
                   <!--                  <span  class="price-text">¥ 34.9</span>-->
                   <!---->
                   <a-popconfirm
-                    title="确定借阅？"
+                    title="确定购买？"
                     ok-text="是"
                     cancel-text="否"
-                    @confirm="handleBorrow(detailData)"
+                    @confirm="handleOrder(detailData)"
                   >
                     <button class="buy-btn">
                         <img src="@/assets/images/add.svg" />
-                        <span>借阅</span>
+                        <span>购买</span>
                     </button>
 
                   </a-popconfirm>
@@ -222,7 +222,7 @@ import {
   addCollectUserApi
 } from '@/api/index/thing'
 import {listApi as listCommentListApi, createApi as createCommentApi, likeApi} from '@/api/index/comment'
-import {createApi} from '@/api/index/borrow'
+import {createApi} from '@/api/index/order'
 
 export default {
   components: {
@@ -295,7 +295,7 @@ export default {
       let shareHref = 'http://service.weibo.com/share/share.php?title=' + content
       window.open(shareHref)
     },
-    handleBorrow (detailData) {
+    handleOrder (detailData) {
       console.log(detailData)
       const userId = this.$store.state.user.userId
       if (userId) {
@@ -303,7 +303,7 @@ export default {
           thing: detailData.id,
           user: userId
         }).then(res => {
-          this.$message.success('借阅成功')
+          this.$message.success('购买成功')
           this.getThingDetail()
         }).catch(err => {
           this.$message.error(err.msg || '失败')
