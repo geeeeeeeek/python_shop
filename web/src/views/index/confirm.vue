@@ -20,7 +20,7 @@
               <h2>可编程网络自动化</h2>
             </div>
             <div class="pay">¥110</div>
-            <a-input-number v-model="count" :min="1" :max="10" @change="onChange" />
+            <a-input-number v-model="count" :min="1" :max="10" />
             <img src="@/assets/images/delete-icon.svg" class="delete">
           </div>
         </div>
@@ -34,24 +34,20 @@
     <div class="right-flex">
       <div class="title flex-view">
         <h3>收货地址</h3>
-        <span class="click-txt" style="">选择地址</span>
+        <span class="click-txt" @click="handleSelectAddress" v-if="receiver_address">选择地址</span>
       </div>
       <div class="address-view">
         <div class="info" style="">
           <span>收件人：</span>
-          <span class="name">
-        </span>
-          <span class="tel">
-        </span>
+          <span class="name">{{receiver_name}}
+          </span>
+          <span class="tel">{{receiver_phone}}
+          </span>
         </div>
-        <div class="address" style="">刘德华 13588889999 山东省德州市明德路大学西路与大学东路交叉口88号</div>
-        <div class="info" style="display: none;">
-          <span>目前暂无售后地址记录，请</span>
-          <span class="info-blue">新建收货地址</span>
-        </div>
-        <div class="info" style="display: none;">
-          <span>目前暂无默认地址，请</span>
-          <span class="info-blue">选择默认地址</span>
+        <div class="address" v-if="receiver_address"> {{receiver_address}}</div>
+        <div class="info" v-else>
+          <span>目前暂无地址信息，请</span>
+          <span class="info-blue" @click="handleCreateAddress">新建地址</span>
         </div>
       </div>
       <div class="title flex-view">
@@ -90,6 +86,8 @@
 <script>
 import Header from '@/views/index/components/header'
 import Footer from '@/views/index/components/footer'
+import AddAddress from '@/views/index/modal/add-address'
+import SelectAddress from '@/views/index/modal/select-address'
 
 export default {
   components: {
@@ -98,10 +96,61 @@ export default {
   },
   data () {
     return {
-      count: 1
+      count: 1,
+      receiver_name: undefined,
+      receiver_phone: undefined,
+      receiver_address: undefined
     }
   },
   methods: {
+    handleSelectAddress () {
+      this.$dialog(
+        SelectAddress,
+        {
+          on: {
+            ok: form => {
+              console.log(form)
+              this.receiver_name = form.get('name')
+              this.receiver_phone = form.get('mobile')
+              this.receiver_address = form.get('desc')
+            }
+          }
+        },
+        {
+          title: '选择地址',
+          width: '480px',
+          centered: true,
+          bodyStyle: {
+            maxHeight: 'calc(100vh - 200px)',
+            overflowY: 'auto'
+          }
+        }
+      )
+    },
+    handleCreateAddress () {
+      this.$dialog(
+        AddAddress,
+        {
+          on: {
+            ok: form => {
+              console.log(form)
+              this.receiver_name = form.get('name')
+              this.receiver_phone = form.get('mobile')
+              this.receiver_address = form.get('desc')
+            }
+          }
+        },
+        {
+          title: '新增地址',
+          width: '480px',
+          centered: true,
+          bodyStyle: {
+            maxHeight: 'calc(100vh - 200px)',
+            overflowY: 'auto'
+          }
+        }
+      )
+    },
     handleJiesuan () {
       this.$router.push({'name': 'pay', query: {'amount': '99'}})
     }
@@ -293,6 +342,10 @@ export default {
   .info {
     color: #909090;
     font-size: 14px;
+    .info-blue {
+      cursor: pointer;
+      color: #4684e2;
+    }
   }
 
   .name {
