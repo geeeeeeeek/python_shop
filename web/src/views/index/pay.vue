@@ -10,7 +10,7 @@
       </div>
       <div class="text">支付金额</div>
       <div class="price">
-        <span class="num">134.8</span>
+        <span class="num">{{amount}}</span>
         <span>元</span>
       </div>
       <div class="pay-choose-view" style="">
@@ -51,6 +51,14 @@ export default {
   components: {
     Footer,
     Header
+  },
+  data () {
+    return {
+      amount: undefined
+    }
+  },
+  mounted () {
+    this.amount = this.$route.query.amount
   },
   methods: {
     handlePay () {

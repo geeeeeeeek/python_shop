@@ -36,9 +36,9 @@ export const createApi = function (data) {
 }
 
 /**
- * 还书
+ * 取消
  */
-export const cancelOrderApi = function (params, data) {
+export const cancelOrderApi = function (params) {
   return axios({
     url: api.cancelOrderApi,
     method: 'post',
@@ -46,7 +46,6 @@ export const cancelOrderApi = function (params, data) {
       'Content-Type': 'multipart/form-data;charset=utf-8'
     },
     params: params,
-    data: data
   })
 }
 /**

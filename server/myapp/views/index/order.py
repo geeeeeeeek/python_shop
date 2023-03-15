@@ -3,6 +3,7 @@ import datetime
 
 from rest_framework.decorators import api_view, authentication_classes
 
+from myapp import utils
 from myapp.auth.authentication import TokenAuthtication
 from myapp.handler import APIResponse
 from myapp.models import Order, Thing
@@ -23,39 +24,31 @@ def list_api(request):
 @api_view(['POST'])
 @authentication_classes([TokenAuthtication])
 def create(request):
-    """
-    创建借书
-    """
 
     data = request.data.copy()
-    if data['user'] is None or data['thing'] is None:
+    if data['user'] is None or data['thing'] is None or data['count'] is None:
         return APIResponse(code=1, msg='参数错误')
 
     thing = Thing.objects.get(pk=data['thing'])
-    if thing.repertory <= 0:
+    count = data['count']
+    if thing.repertory < int(count):
         return APIResponse(code=1, msg='库存不足')
 
-    orders = Order.objects.filter(thing=data['thing']).filter(user=data['user']).filter(status='1')
-    if len(orders) > 0:
-        return APIResponse(code=1, msg='您已经借过该书了')
-
     create_time = datetime.datetime.now()
-
-    data['status'] = '1'
-    data['delayed'] = False
     data['create_time'] = create_time
-    data['expect_time'] = create_time + datetime.timedelta(days=60)
+    data['order_number'] = str(utils.get_timestamp())
+    data['status'] = '1'
     serializer = OrderSerializer(data=data)
     if serializer.is_valid():
         serializer.save()
-        # 减库存
-        thing.repertory = thing.repertory - 1
-        thing.save()
+        # 减库存(支付后)
+        # thing.repertory = thing.repertory - int(count)
+        # thing.save()
 
-        return APIResponse(code=0, msg='借书成功', data=serializer.data)
+        return APIResponse(code=0, msg='创建成功', data=serializer.data)
     else:
         print(serializer.errors)
-        return APIResponse(code=1, msg='借书失败')
+        return APIResponse(code=1, msg='创建失败')
 
 
 @api_view(['POST'])
@@ -71,22 +64,22 @@ def cancel_order(request):
         return APIResponse(code=1, msg='对象不存在')
 
     data = {
-        'status': 2
+        'status': 7
     }
     serializer = OrderSerializer(order, data=data)
     if serializer.is_valid():
         serializer.save()
         # 加库存
-        thingId = request.data['thing']
-        thing = Thing.objects.get(pk=thingId)
-        thing.repertory = thing.repertory + 1
-        thing.save()
+        # thingId = request.data['thing']
+        # thing = Thing.objects.get(pk=thingId)
+        # thing.repertory = thing.repertory + 1
+        # thing.save()
 
         # 加积分
-        order.user.score = order.user.score + 1
-        order.user.save()
+        # order.user.score = order.user.score + 1
+        # order.user.save()
 
-        return APIResponse(code=0, msg='还书成功', data=serializer.data)
+        return APIResponse(code=0, msg='取消成功', data=serializer.data)
     else:
         print(serializer.errors)
         return APIResponse(code=1, msg='更新失败')

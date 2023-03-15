@@ -53,7 +53,7 @@ const columns = [
     align: 'center'
   },
   {
-    title: '书名',
+    title: '商品名称',
     dataIndex: 'title',
     key: 'title',
     align: 'center'

@@ -4,7 +4,7 @@
       <a-space>
         <a-button type="primary" @click="handleAdd">新增</a-button>
         <a-button @click="handleBatchDelete">批量删除</a-button>
-        <a-input-search addon-before="书名" enter-button @search="onSearch" @change="onSearchChange" />
+        <a-input-search addon-before="商品" enter-button @search="onSearch" @change="onSearchChange" />
       </a-space>
     </div>
     <div class="table-wrap" ref="tableWrap">

@@ -19,6 +19,15 @@
             <span class="time">{{item.order_time}}</span>
           </div>
           <div class="right">
+            <a-popconfirm
+              v-if="item.status==='1'"
+              title="确定取消订单？"
+              ok-text="是"
+              cancel-text="否"
+              @confirm="handleCancel(item)"
+            >
+              <a-button type="primary" size="small" style="margin-right: 24px;">取消</a-button>
+            </a-popconfirm>
             <span class="text">订单状态</span>
             <span class="state">{{item.status==='1'? '待支付': item.status === '2'? '已支付':'已取消'}}</span>
           </div>
@@ -41,15 +50,15 @@
           </div>
           <div class="right-info">
             <p class="title">收货信息</p>
-            <p class="name">刘德华
+            <p class="name">{{item.receiver_name}}{{item.receiver_phone}}
             </p>
-            <p class="text mg">北京市东城区xxx小区
+            <p class="text mg">{{item.receiver_address}}
             </p>
             <p class="title">快递单号</p>
-            <p class="text">123456666
+            <p class="text">
             </p>
             <p class="title">备注信息</p>
-            <p class="text">哈哈哈
+            <p class="text">{{item.remark}}
             </p>
           </div>
         </div>
@@ -74,6 +83,7 @@
 
 <script>
 import {listApi} from '@/api/index/order'
+import {cancelOrderApi} from '@/api/index/order'
 
 export default {
   name: 'OrderView',
@@ -121,6 +131,16 @@ export default {
       let text = this.$router.resolve({name: 'detail', query: {id: thingId}})
       window.open(text.href, '_blank')
     },
+    handleCancel (item) {
+      cancelOrderApi({
+        id: item.id
+      }).then(res => {
+        this.$message.success('取消成功')
+        this.getOrderList()
+      }).catch(err => {
+        this.$message.error(err.msg || '取消失败')
+      })
+    }
   }
 }
 </script>

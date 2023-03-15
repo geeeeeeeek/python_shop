@@ -12,22 +12,25 @@
               </div>
               <div class="thing-info-box">
                 <div class="thing-state">
-                  <span class="state hidden-sm">书籍状态</span>
-                  <span>可借</span>
+                  <span class="state hidden-sm">商品状态</span>
+                  <span>上市销售</span>
                 </div>
                 <h1 class="thing-name">{{ detailData.title }}</h1>
-                <div class="authors flex-view">
-                  <span>作者：</span>
-                  <span class="name">{{ detailData.author }}</span>
-                </div>
                 <div class="translators flex-view" style="">
-                  <span>译者：</span>
-                  <span class="name">{{ detailData.translator }}</span>
+                  <span class="price">¥{{detailData.price}}</span>
                 </div>
                 <div class="translators flex-view" style="">
                   <span>分类：</span>
                   <span class="name">{{ detailData.classification_title }}</span>
                 </div>
+                <div class="translators flex-view" style="">
+                  <span>库存：</span>
+                  <span class="name">{{ detailData.repertory }}</span>
+                </div>
+                <button class="buy-btn" @click="handleOrder(detailData)">
+                  <img src="@/assets/images/add.svg" />
+                  <span>立即购买</span>
+                </button>
               </div>
             </div>
             <div class="thing-counts hidden-sm">
@@ -57,19 +60,6 @@
                   </div>
                 </div>
               </div>
-              <!--              <div class="count-item flex-view">-->
-              <!--                <div class="count-img">-->
-              <!--                  <img src="@/assets/read-online-icon.svg">-->
-              <!--                </div>-->
-              <!--                <div class="count-box flex-view">-->
-              <!--                  <div class="count-text-box">-->
-              <!--                    <span class="count-title">次数</span>-->
-              <!--                  </div>-->
-              <!--                  <div class="count-num-box">-->
-              <!--                    <span class="num-text">120</span>-->
-              <!--                  </div>-->
-              <!--                </div>-->
-              <!--              </div>-->
               <div class="count-item flex-view" @click="share()">
                 <div class="count-img">
                   <img src="@/assets/images/share-icon.svg">
@@ -84,46 +74,6 @@
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-
-          <div data-v-04e3a7b4="" class="buy-way hidden-sm">
-            <div class="title">操作区域</div>
-            <div class="flex-view">
-              <div class="buy-way-item" style="">
-                <div class="name">
-                  <span>库存：{{detailData.repertory}}</span>
-                </div>
-                <div class="price">
-                  <!--                  <span  class="price-text">¥ 34.9</span>-->
-                  <!---->
-                  <a-popconfirm
-                    title="确定购买？"
-                    ok-text="是"
-                    cancel-text="否"
-                    @confirm="handleOrder(detailData)"
-                  >
-                    <button class="buy-btn">
-                        <img src="@/assets/images/add.svg" />
-                        <span>购买</span>
-                    </button>
-
-                  </a-popconfirm>
-                </div>
-              </div>
-              <!--              <div  class="buy-way-item" style="">-->
-              <!--                <div  class="name">-->
-              <!--                  <span >电子书</span>-->
-              <!--                </div>-->
-              <!--                <div  class="price">-->
-              <!--                  <span  class="price-text">¥ 34.9</span>-->
-              <!--                  &lt;!&ndash;&ndash;&gt;-->
-              <!--                  <button  class="buy-btn">-->
-              <!--                    <img  src="@/assets/add.svg">-->
-              <!--                    <span >购书袋</span>-->
-              <!--                  </button>-->
-              <!--                </div>-->
-              <!--              </div>-->
             </div>
           </div>
         </div>
@@ -234,12 +184,12 @@ export default {
       thingId: '',
       detailData: undefined,
       tabUnderLeft: 6,
-      tabData: ['简介', '评论'],
+      tabData: ['商品介绍', '评论'],
       selectTabIndex: 0,
       commentData: [],
       recommendData: [],
       sortIndex: 0,
-      order: 'recent', // 默认排序最新
+      order: 'recent' // 默认排序最新
     }
   },
   mounted () {
@@ -298,19 +248,26 @@ export default {
     handleOrder (detailData) {
       console.log(detailData)
       const userId = this.$store.state.user.userId
-      if (userId) {
-        createApi({
-          thing: detailData.id,
-          user: userId
-        }).then(res => {
-          this.$message.success('购买成功')
-          this.getThingDetail()
-        }).catch(err => {
-          this.$message.error(err.msg || '失败')
-        })
-      } else {
-        this.$message.warn('请先登录')
-      }
+      this.$router.push({name: 'confirm',
+        query:
+          {
+            id: detailData.id,
+            title: detailData.title,
+            price: detailData.price
+          }})
+      // if (userId) {
+      //   createApi({
+      //     thing: detailData.id,
+      //     user: userId
+      //   }).then(res => {
+      //     this.$message.success('购买成功')
+      //     this.getThingDetail()
+      //   }).catch(err => {
+      //     this.$message.error(err.msg || '失败')
+      //   })
+      // } else {
+      //   this.$message.warn('请先登录')
+      // }
     },
     getRecommendThing () {
       listThingList({sort: 'recommend'}).then(res => {
@@ -597,6 +554,32 @@ export default {
   }
 }
 
+.buy-btn {
+  cursor: pointer;
+  display: block;
+  background: #4684e2;
+  border-radius: 4px;
+  text-align: center;
+  color: #fff;
+  font-size: 14px;
+  height: 36px;
+  line-height: 36px;
+  width: 110px;
+  outline: none;
+  border: none;
+  margin-top: 12px;
+}
+
+.buy-btn img {
+  width: 12px;
+  margin-right: 2px;
+  vertical-align: middle;
+}
+
+.buy-btn span {
+  vertical-align: middle;
+}
+
 .buy-way {
   overflow: hidden;
 
@@ -607,63 +590,6 @@ export default {
     line-height: 26px;
     color: #152844;
     margin-bottom: 12px;
-  }
-
-  .buy-way-item {
-    background: #fbfeff;
-    border: 1px solid #cedce4;
-    border-radius: 4px;
-    -webkit-box-flex: 0;
-    margin-right: 20px;
-    -ms-flex: 0 0 255px;
-    flex: 0 0 255px;
-    padding: 10px;
-
-    .name {
-      font-weight: 500;
-      font-size: 16px;
-      line-height: 24px;
-      color: #152844;
-      height: 24px;
-      margin-bottom: 12px;
-    }
-
-    .price {
-      position: relative;
-      line-height: 24px;
-    }
-
-    .price-text {
-      color: #ff7b31;
-      font-size: 18px;
-      font-weight: 700;
-    }
-
-    .buy-btn {
-      cursor: pointer;
-      display: block;
-      background: #4684e2;
-      border-radius: 4px;
-      text-align: center;
-      color: #fff;
-      font-size: 14px;
-      height: 32px;
-      line-height: 32px;
-      width: 76px;
-      outline: none;
-      border: none;
-      margin-top: 12px;
-    }
-
-    .buy-btn img {
-      width: 12px;
-      margin-right: 2px;
-      vertical-align: middle;
-    }
-
-    .buy-btn span {
-      vertical-align: middle;
-    }
   }
 }
 
@@ -916,6 +842,14 @@ export default {
       background: #cedce4;
     }
   }
+}
+
+.price {
+  color: #ff7b31;
+  font-size: 24px;
+  font-weight: 700;
+  margin-top: 12px;
+  margin-bottom: 24px;
 }
 
 .comments-list {

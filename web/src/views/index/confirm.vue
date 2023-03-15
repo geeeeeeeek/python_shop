@@ -17,10 +17,10 @@
           <div class="items flex-view">
             <div class="book flex-view">
               <img src="https://file.ituring.com.cn/SmallCover/2212c21242c05ebc49f3">
-              <h2>可编程网络自动化</h2>
+              <h2>{{title}}</h2>
             </div>
-            <div class="pay">¥110</div>
-            <a-input-number v-model="count" :min="1" :max="10" />
+            <div class="pay">¥{{price}}</div>
+            <a-input-number v-model="count" :min="1" :max="10" @change="onCountChange"/>
             <img src="@/assets/images/delete-icon.svg" class="delete">
           </div>
         </div>
@@ -28,7 +28,7 @@
       <div class="title flex-view">
         <h3>备注</h3>
       </div>
-      <textarea placeholder="输入备注信息，100字以内" class="remark">
+      <textarea :value="remark" placeholder="输入备注信息，100字以内" class="remark">
     </textarea>
     </div>
     <div class="right-flex">
@@ -57,7 +57,7 @@
       <div class="price-view">
         <div class="price-item flex-view">
           <div class="item-name">商品总价</div>
-          <div class="price-txt">¥99</div>
+          <div class="price-txt">¥{{this.amount}}</div>
         </div>
         <div class="price-item flex-view">
           <div class="item-name">商品优惠</div>
@@ -70,11 +70,11 @@
         <div class="total-price-view flex-view">
           <span>合计</span>
           <div class="price">
-            <span class="font-big">¥99</span>
+            <span class="font-big">¥{{this.amount}}</span>
           </div>
         </div>
         <div class="btns-view">
-          <button class="btn buy">继续购物</button>
+          <button class="btn buy">返回</button>
           <button class="btn pay jiesuan" @click="handleJiesuan()">结算</button>
         </div>
       </div>
@@ -88,6 +88,8 @@ import Header from '@/views/index/components/header'
 import Footer from '@/views/index/components/footer'
 import AddAddress from '@/views/index/modal/add-address'
 import SelectAddress from '@/views/index/modal/select-address'
+import {createApi} from '@/api/index/order'
+import {listApi as listAddressListApi} from '@/api/index/address'
 
 export default {
   components: {
@@ -96,13 +98,50 @@ export default {
   },
   data () {
     return {
+      id: undefined,
+      title: undefined,
+      price: undefined,
+      remark: undefined,
       count: 1,
+      amount: undefined,
       receiver_name: undefined,
       receiver_phone: undefined,
       receiver_address: undefined
     }
   },
+  mounted () {
+    this.id = this.$route.query.id
+    this.title = this.$route.query.title
+    this.price = this.$route.query.price
+    this.amount = this.price
+
+    this.listAddressData()
+  },
   methods: {
+    onCountChange(value){
+      this.amount = this.price * value
+    },
+    listAddressData () {
+      let userId = this.$store.state.user.userId
+      listAddressListApi({userId: userId}).then(res => {
+
+        if (res.data.length > 0) {
+          this.receiver_name = res.data[0].name
+          this.receiver_phone = res.data[0].mobile
+          this.receiver_address = res.data[0].desc
+          res.data.forEach(item => {
+            if (item.default) {
+              this.receiver_name = item.name
+              this.receiver_phone = item.mobile
+              this.receiver_address = item.desc
+            }
+          })
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+
     handleSelectAddress () {
       this.$dialog(
         SelectAddress,
@@ -152,7 +191,32 @@ export default {
       )
     },
     handleJiesuan () {
-      this.$router.push({'name': 'pay', query: {'amount': '99'}})
+      const formData = new FormData()
+      let userId = this.$store.state.user.userId
+      if (!userId) {
+        this.$message.warn('请先登录！')
+        return
+      }
+      if (!this.receiver_name) {
+        this.$message.warn('请选择地址！')
+        return
+      }
+      formData.append('user', userId)
+      formData.append('thing', this.id)
+      formData.append('count', this.count)
+      if (this.remark){
+        formData.append('remark', this.remark)
+      }
+      formData.append('receiver_name', this.receiver_name)
+      formData.append('receiver_phone', this.receiver_phone)
+      formData.append('receiver_address', this.receiver_address)
+      console.log(formData)
+      createApi(formData).then(res => {
+        this.$message.success('请支付订单')
+        this.$router.push({'name': 'pay', query: {'amount': this.amount}})
+      }).catch(err => {
+        this.$message.error(err.msg || '失败')
+      })
     }
 
   }

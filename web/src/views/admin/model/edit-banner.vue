@@ -27,7 +27,7 @@
         </a-form-model-item>
       </a-col>
       <a-col span="24">
-        <a-form-model-item label="关联图书" prop="thing">
+        <a-form-model-item label="关联商品" prop="thing">
           <a-select placeholder="请选择" allowClear v-model="form.thing">
             <template v-for="item in thingData">
               <a-select-option :key="item.id" :value="item.id">{{item.title}}</a-select-option>
@@ -63,7 +63,7 @@ export default {
       },
       thingData: [],
       rules: {
-        thing: [{ required: true, message: '请选择图书', trigger: 'change' }]
+        thing: [{ required: true, message: '请选择商品', trigger: 'change' }]
       }
     }
   },
