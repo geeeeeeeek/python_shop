@@ -5,18 +5,18 @@
 
 整个平台包括前台和后台两个部分。
 
-- 前台功能包括：首页、图书详情页、用户中心模块。
-- 后台功能包括：总览、借阅管理、图书管理、分类管理、标签管理、评论管理、用户管理、运营管理、日志管理、系统信息模块。
+- 前台功能包括：首页、商品详情页、用户中心模块。
+- 后台功能包括：总览、订单管理、图书管理、分类管理、标签管理、评论管理、用户管理、运营管理、日志管理、系统信息模块。
 
 ### 源码下载
 
-https://github.com/geeeeeeeek/book
+https://github.com/geeeeeeeek/shop
 
 ### 演示地址
 
-前台地址： http://1.117.171.66:8001/#/index
+前台地址： http://1.117.171.66:8003/#/index
 
-后台地址：http://1.117.171.66:8001/#/admin
+后台地址：http://1.117.171.66:8003/#/admin
 
 后台管理帐号：
 
@@ -38,7 +38,7 @@ https://github.com/geeeeeeeek/book
 
 (3) 安装mysql 5.7数据库，并创建数据库，命名为book，创建SQL如下：
 ```
-CREATE DATABASE IF NOT EXISTS book DEFAULT CHARSET utf8 COLLATE utf8_general_ci
+CREATE DATABASE IF NOT EXISTS shop DEFAULT CHARSET utf8 COLLATE utf8_general_ci
 ```
 (4) 迁移数据。在server目录下依次执行如下命令：
 
@@ -85,6 +85,7 @@ npm run serve
 - 邮箱推送功能
 - 手机号绑定功能
 - 粉丝关注功能
+- 支付功能
 
 ### 问题咨询
 

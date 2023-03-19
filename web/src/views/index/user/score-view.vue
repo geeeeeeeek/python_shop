@@ -21,7 +21,7 @@ export default {
     this.getUserInfo()
   },
   methods: {
-    // 积分逻辑：每次还书的时候积分加1
+    // 积分逻辑：积分加1
     getUserInfo () {
       this.loading = true
       let userId = this.$store.state.user.userId

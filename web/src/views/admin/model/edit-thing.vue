@@ -67,12 +67,12 @@
         </a-form-model-item>
       </a-col>
       <a-col span="12">
-        <a-form-model-item label="定价">
-          <a-input placeholder="请输入" v-model="form.price"></a-input>
+        <a-form-model-item label="定价" prop="price">
+          <a-input-number  placeholder="请输入" :min="0" v-model="form.price" style="width: 100%;"></a-input-number>
         </a-form-model-item>
       </a-col>
       <a-col span="12">
-        <a-form-model-item label="状态">
+        <a-form-model-item label="状态" prop="status">
           <a-select placeholder="请选择" allowClear v-model="form.status">
             <a-select-option key="0" value="0">上架</a-select-option>
             <a-select-option key="1" value="1">下架</a-select-option>
@@ -114,7 +114,9 @@ export default {
       rules: {
         title: [{ required: true, message: '请输入名称', trigger: 'change' }],
         classification: [{ required: true, message: '请选择分类', trigger: 'change' }],
-        repertory: [{ required: true, message: '请输入库存', trigger: 'change' }]
+        repertory: [{ required: true, message: '请输入库存', trigger: 'change' }],
+        price: [{ required: true, message: '请输入定价', trigger: 'change' }],
+        status: [{ required: true, message: '请选择状态', trigger: 'change' }]
       },
       cData: [],
       tagData: []

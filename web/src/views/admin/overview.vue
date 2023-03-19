@@ -19,46 +19,46 @@
         </a-col>
 
         <a-col :sm="24" :md="12" :lg="6">
-          <a-card size="small" title="在借书籍">
-            <a-tag color="green" slot="extra">借</a-tag>
+          <a-card size="small" title="未付订单">
+            <a-tag color="green" slot="extra">未付</a-tag>
             <div class="box">
               <div class="box-top">
-                <span class="box-value">{{ data.order_count }}<span class="v-e">本</span></span>
+                <span class="box-value">{{ data.order_not_pay_count }}<span class="v-e">单</span></span>
                 <a-icon type="carry-out"  theme="twoTone" style="font-size: 24px;"/>
               </div>
               <div class="box-bottom">
-                <span>共 {{data.order_person_count}} 人</span>
+                <span>共 {{data.order_not_pay_p_count}} 人</span>
               </div>
             </div>
           </a-card>
         </a-col>
 
         <a-col :sm="24" :md="12" :lg="6">
-          <a-card size="small" title="已还书籍">
-            <a-tag color="blue" slot="extra">还</a-tag>
+          <a-card size="small" title="已付订单">
+            <a-tag color="blue" slot="extra">已付</a-tag>
             <div class="box">
               <div class="box-top">
-                <span class="box-value">{{ data.return_count }}<span class="v-e">本</span></span>
+                <span class="box-value">{{ data.order_payed_count }}<span class="v-e">单</span></span>
                 <a-icon type="interaction" theme="twoTone" style="font-size: 24px;"/>
               </div>
               <div class="box-bottom">
-                <span>共 {{data.return_person_count}} 人</span>
+                <span>共 {{data.order_payed_p_count}} 人</span>
               </div>
             </div>
           </a-card>
         </a-col>
 
         <a-col :sm="24" :md="12" :lg="6">
-          <a-card size="small" title="逾期未还">
-            <a-tag color="green" slot="extra">逾</a-tag>
+          <a-card size="small" title="取消订单">
+            <a-tag color="green" slot="extra">取消</a-tag>
 
             <div class="box">
               <div class="box-top">
-                <span class="box-value">{{ data.overdue_count }}<span class="v-e">本</span></span>
+                <span class="box-value">{{ data.order_cancel_count }}<span class="v-e">单</span></span>
                 <a-icon type="bell" theme="twoTone" style="font-size: 24px;"/>
               </div>
               <div class="box-bottom">
-                <span>共 {{data.overdue_person_count}} 人</span>
+                <span>共 {{data.order_cancel_p_count}} 人</span>
               </div>
             </div>
           </a-card>
@@ -71,7 +71,7 @@
 
       <a-row :gutter="[20,20]">
         <a-col :sm="24" :md="24" :lg="12">
-          <a-card title="热门借阅排名" style="flex:1;">
+          <a-card title="热门商品排名" style="flex:1;">
             <div style="height: 300px;" ref="barChart"></div>
           </a-card>
         </a-col>
@@ -237,7 +237,7 @@ export default {
           bottom: '40px'
         },
         title: {
-          text: '近30天借阅排名',
+          text: '热门商品排名',
           textStyle: {
             color: '#aaa',
             fontStyle: 'normal',
@@ -313,7 +313,7 @@ export default {
           bottom: '40px'
         },
         title: {
-          text: '近30天热门借阅分类',
+          text: '热门商品分类',
           textStyle: {
             color: '#aaa',
             fontStyle: 'normal',

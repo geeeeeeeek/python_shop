@@ -81,12 +81,12 @@ const constantRouterMap = [
           {
             path: 'orderView',
             name: 'orderView',
-            component: () => import('@/views/index/user/order-view1')
+            component: () => import('@/views/index/user/order-view')
           },
           {
             path: 'orderView',
             name: 'orderView',
-            component: () => import('@/views/index/user/order-view1')
+            component: () => import('@/views/index/user/order-view')
           },
           {
             path: 'userInfoEditView',

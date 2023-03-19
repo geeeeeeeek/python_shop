@@ -16,9 +16,10 @@
                   <span>上市销售</span>
                 </div>
                 <h1 class="thing-name">{{ detailData.title }}</h1>
-                <div class="translators flex-view" style="">
-                  <span class="price">¥{{detailData.price}}</span>
-                </div>
+                <span>
+                  <span class="a-price-symbol">¥</span>
+                  <span class="a-price">{{detailData.price}}</span>
+                </span>
                 <div class="translators flex-view" style="">
                   <span>分类：</span>
                   <span class="name">{{ detailData.classification_title }}</span>
@@ -145,12 +146,13 @@
             <div class="things">
               <div class="thing-item thing-item" v-for="item in recommendData" @click="handleDetail(item)">
                 <div class="img-view">
-                  <img :src="item.cover">
-                </div>
+                  <img :src="item.cover"></div>
                 <div class="info-view">
-                  <h3 class="thing-name">{{ item.title }}</h3>
-                  <p class="authors" v-if="item.author">{{ item.author }}（作者）</p>
-                  <p class="translators" v-if="item.translator">{{ item.translator }}（译者）</p>
+                  <h3 class="thing-name">{{ item.title.substring(0, 12)}}</h3>
+                  <span>
+                    <span class="a-price-symbol">¥</span>
+                    <span class="a-price">{{item.price}}</span>
+                  </span>
                 </div>
               </div>
             </div>
@@ -184,7 +186,7 @@ export default {
       thingId: '',
       detailData: undefined,
       tabUnderLeft: 6,
-      tabData: ['商品介绍', '评论'],
+      tabData: ['详情', '评论'],
       selectTabIndex: 0,
       commentData: [],
       recommendData: [],
@@ -414,12 +416,12 @@ export default {
     margin: 0 40px 0 0;
 
     img {
-      width: 235px;
-      height: 339px;
+      width: 200px;
+      height: 186px;
       display: block;
       margin: 0 auto;
-      border: 1px solid #eee;
-      border-radius: 4px;
+      //border: 1px solid #eee;
+      //border-radius: 4px;
     }
   }
 
@@ -449,9 +451,14 @@ export default {
   }
 
   .thing-name {
-    font-size: 24px;
     line-height: 32px;
     margin: 16px 0;
+    color: #0F1111!important;
+    font-size: 15px!important;
+    font-weight: 400!important;
+    font-style: normal!important;
+    text-transform: none!important;
+    text-decoration: none!important;
   }
 
   .translators, .authors {
@@ -567,7 +574,7 @@ export default {
   width: 110px;
   outline: none;
   border: none;
-  margin-top: 12px;
+  margin-top: 18px;
 }
 
 .buy-btn img {
@@ -670,59 +677,54 @@ export default {
     border-top: 1px solid #cedce4;
 
     .thing-item {
-      position: relative;
-      -webkit-box-flex: 1;
-      -ms-flex: 1;
-      flex: 1;
       min-width: 255px;
       max-width: 255px;
-      margin: 16px 0;
+      position: relative;
+      flex: 1;
+      margin-right: 20px;
       height: fit-content;
-      border-radius: 4px;
       overflow: hidden;
+      margin-top: 26px;
+      margin-bottom: 36px;
+      padding-bottom: 24px;
+      border-bottom: 1px #e1e1e1 solid;
       cursor: pointer;
 
       .img-view {
-        background: #eaf1f5;
-        font-size: 0;
-        text-align: center;
-        height: 156px;
-        padding: 8px 0;
+        //background: #f3f3f3;
+        //text-align: center;
+        height: 200px;
+        width: 255px;
+        //border: 1px #f3f3f3 solid;
 
         img {
-          height: 100%;
-          display: block;
+          height: 200px;
+          width: 186px;
+          overflow: hidden;
           margin: 0 auto;
-          border-radius: 4px;
-          -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+          background-size: contain;
         }
       }
 
       .info-view {
-        background: #f6f9fb;
-        text-align: center;
-        height: 108px;
+        //background: #f6f9fb;
         overflow: hidden;
         padding: 0 16px;
-
-        h3 {
-          color: #1c355a;
-          font-weight: 500;
-          font-size: 16px;
-          line-height: 20px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          margin: 12px 0 8px;
+        .thing-name {
+          line-height: 32px;
+          margin-top: 12px;
+          color: #0F1111!important;
+          font-size: 15px!important;
+          font-weight: 400!important;
+          font-style: normal!important;
+          text-transform: none!important;
+          text-decoration: none!important;
         }
 
-        .authors {
-          color: #6f6f6f;
-          font-size: 12px;
-          line-height: 14px;
+        .price {
+          color: #ff7b31;
+          font-size: 20px;
+          line-height: 20px;
           margin-top: 4px;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -740,6 +742,7 @@ export default {
         }
       }
     }
+
   }
 }
 
@@ -844,13 +847,6 @@ export default {
   }
 }
 
-.price {
-  color: #ff7b31;
-  font-size: 24px;
-  font-weight: 700;
-  margin-top: 12px;
-  margin-bottom: 24px;
-}
 
 .comments-list {
   .comment-item {
@@ -929,5 +925,14 @@ export default {
 .infinite-loading-container {
   clear: both;
   text-align: center;
+}
+
+.a-price-symbol {
+  top: -0.5em;
+  font-size: 12px;
+}
+.a-price {
+  color: #0F1111;
+  font-size:21px;
 }
 </style>

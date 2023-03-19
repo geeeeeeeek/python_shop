@@ -6,20 +6,6 @@
         <a-tree :tree-data="cData" :selected-keys="selectedKeys" @select="onSelect" style="min-height: 220px;">
         </a-tree>
       </div>
-      <!--      <div class="left-search-item"><h4>书籍状态</h4>-->
-      <!--        <div class="check-item flex-view"><input type="checkbox" name="state"-->
-      <!--                                                 id="state0" value=""><label-->
-      <!--          for="state0">上架</label>-->
-      <!--        </div>-->
-      <!--        <div class="check-item flex-view"><input type="checkbox" name="state"-->
-      <!--                                                 id="state1" value=""><label-->
-      <!--          for="state1">下架</label>-->
-      <!--        </div>-->
-      <!--        <div class="check-item flex-view"><input type="checkbox" name="state"-->
-      <!--                                                 id="state2" value=""><label-->
-      <!--          for="state2">预售</label>-->
-      <!--        </div>-->
-      <!--      </div>-->
       <div class="left-search-item"><h4>热门标签</h4>
         <div class="tag-view tag-flex-view">
             <span class="tag" :class="{'tag-select': selectTagId===item.id}" v-for="item in tagData" :key="item.id"
@@ -46,9 +32,13 @@
           <div v-for="item in pageData" :key="item.id" @click="handleDetail(item)" class="thing-item item-column-3"><!---->
             <div class="img-view">
               <img :src="item.cover"></div>
-            <div class="info-view"><h3 class="thing-name">{{ item.title }}</h3>
-              <p class="authors">{{ item.author }}</p>
-              <p class="translators" v-if="item.translator">{{ item.translator }}（译者）</p></div>
+            <div class="info-view">
+              <h3 class="thing-name">{{ item.title.substring(0, 12)}}</h3>
+              <span>
+                <span class="a-price-symbol">¥</span>
+                <span class="a-price">{{item.price}}</span>
+              </span>
+            </div>
           </div>
           <div v-if="pageData.length <= 0 && !loading" class="no-data" style="">暂无数据</div>
         </div>
@@ -479,52 +469,43 @@ li {
       flex: 1;
       margin-right: 20px;
       height: fit-content;
-      border-radius: 4px;
       overflow: hidden;
-      margin-top: 16px;
+      margin-top: 26px;
+      margin-bottom: 36px;
       cursor: pointer;
 
       .img-view {
-        background: #eaf1f5;
-        font-size: 0;
-        text-align: center;
-        height: 156px;
-        padding: 8px 0;
+        //text-align: center;
+        height: 200px;
+        width: 255px;
 
         img {
-          height: 100%;
-          display: block;
+          height: 200px;
+          width: 186px;
           margin: 0 auto;
-          border-radius: 4px;
-          -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+          background-size: contain;
         }
       }
 
       .info-view {
-        background: #f6f9fb;
-        text-align: center;
-        height: 108px;
+        //background: #f6f9fb;
         overflow: hidden;
         padding: 0 16px;
-
-        h3 {
-          color: #1c355a;
-          font-weight: 500;
-          font-size: 16px;
-          line-height: 20px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          margin: 12px 0 8px;
+        .thing-name {
+          line-height: 32px;
+          margin-top: 12px;
+          color: #0F1111!important;
+          font-size: 15px!important;
+          font-weight: 400!important;
+          font-style: normal!important;
+          text-transform: none!important;
+          text-decoration: none!important;
         }
 
-        .authors {
-          color: #6f6f6f;
-          font-size: 12px;
-          line-height: 14px;
+        .price {
+          color: #ff7b31;
+          font-size: 20px;
+          line-height: 20px;
           margin-top: 4px;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -558,6 +539,15 @@ li {
     text-align: center;
     margin-top: 48px;
   }
+}
+
+.a-price-symbol {
+  top: -0.5em;
+  font-size: 12px;
+}
+.a-price {
+  color: #0F1111;
+  font-size:21px;
 }
 
 </style>

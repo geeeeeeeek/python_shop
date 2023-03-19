@@ -74,7 +74,7 @@
           </div>
         </div>
         <div class="btns-view">
-          <button class="btn buy">返回</button>
+          <button class="btn buy" @click="handleBack()">返回</button>
           <button class="btn pay jiesuan" @click="handleJiesuan()">结算</button>
         </div>
       </div>
@@ -189,6 +189,10 @@ export default {
           }
         }
       )
+    },
+    handleBack () {
+      this.$router.back()
+      console.log('back...')
     },
     handleJiesuan () {
       const formData = new FormData()

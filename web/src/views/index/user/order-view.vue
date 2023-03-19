@@ -4,32 +4,32 @@
     <a-tabs default-active-key="1" @change="onTabChange">
       <a-tab-pane key="1" tab="全部">
       </a-tab-pane>
-      <a-tab-pane key="2" tab="在借">
+      <a-tab-pane key="2" tab="待付款">
       </a-tab-pane>
-      <a-tab-pane key="3" tab="已还">
+      <a-tab-pane key="3" tab="已支付">
       </a-tab-pane>
     </a-tabs>
-    <a-spin :spinning="loading" style="min-height: 200px;">
-      <div class="list-content">
+    <div class="list-content">
       <div class="order-item-view" v-for="(item, index) in orderData" :key="index">
         <div class="header flex-view">
           <div class="left">
-            <span class="text">订单ID</span>
+            <span class="text">订单号</span>
             <span class="num mg-4">#</span>
-            <span class="num">{{item.id}}</span>
+            <span class="num">{{item.order_number}}</span>
+            <span class="time">{{item.order_time}}</span>
           </div>
           <div class="right">
             <a-popconfirm
               v-if="item.status==='1'"
-              title="确定还书？"
+              title="确定取消订单？"
               ok-text="是"
               cancel-text="否"
-              @confirm="handleReturn(item)"
+              @confirm="handleCancel(item)"
             >
-              <a-button type="primary" size="small" style="margin-right: 24px;">还书</a-button>
+              <a-button type="primary" size="small" style="margin-right: 24px;">取消</a-button>
             </a-popconfirm>
-            <span class="text">状态</span>
-            <span class="state">{{item.status==='1'? '在借':'已还'}}</span>
+            <span class="text">订单状态</span>
+            <span class="state">{{item.status==='1'? '待支付': item.status === '2'? '已支付':'已取消'}}</span>
           </div>
         </div>
         <div class="content flex-view">
@@ -39,33 +39,45 @@
               <div class="detail flex-between flex-view">
                 <div class="flex-between flex-top flex-view">
                   <h2 class="name">{{item.title}}</h2>
-                  <span class="count">1本</span>
+                  <span class="count">x{{item.count}}</span>
                 </div>
                 <div class="flex-between flex-center flex-view">
-                  <span class="type">纸质书</span>
-                  <span class="price"></span>
+                  <span class="type"></span>
+                  <span class="price">¥{{item.price}}</span>
                 </div>
               </div>
             </div>
           </div>
           <div class="right-info">
-            <p class="title">借入时间</p>
-            <p class="name">{{item.order_time}}</p>
-            <p class="title">到期时间</p>
-            <p class="text">{{item.expect_time}}
+            <p class="title">收货信息</p>
+            <p class="name">{{item.receiver_name}}{{item.receiver_phone}}
             </p>
-            <p class="text"></p>
+            <p class="text mg">{{item.receiver_address}}
+            </p>
+            <p class="title">快递单号</p>
+            <p class="text">
+            </p>
+            <p class="title">备注信息</p>
+            <p class="text">{{item.remark}}
+            </p>
           </div>
         </div>
         <div class="bottom flex-view">
           <div class="left">
-            <span class="text">共1本</span>
+            <span class="text">共{{item.count}}件商品</span>
             <span class="open" @click="handleDetail(item.thing)">商品详情</span>
+          </div>
+          <div class="right flex-view">
+            <span class="text">总计</span>
+            <span class="num">¥ {{item.price * item.count}}</span>
+            <span class="text">优惠</span>
+            <span class="num">¥0</span>
+            <span class="text">实际支付</span>
+            <span class="money">¥ {{item.price * item.count}}</span>
           </div>
         </div>
       </div>
     </div>
-    </a-spin>
   </div>
 </template>
 
@@ -77,8 +89,7 @@ export default {
   name: 'OrderView',
   data () {
     return {
-      loading: false,
-      orderData: [],
+      orderData: ['', '', ''],
       orderStatus: ''
     }
   },
@@ -115,19 +126,21 @@ export default {
         this.loading = false
       })
     },
-    handleReturn (item) {
-      cancelOrderApi({id: item.id}, {thing: item.thing}).then(res => {
-        this.getOrderList()
-        this.$message.success('还书成功')
-      }).catch(err => {
-        console.log(err)
-      })
-    },
     handleDetail (thingId) {
       // 跳转新页面
       let text = this.$router.resolve({name: 'detail', query: {id: thingId}})
       window.open(text.href, '_blank')
     },
+    handleCancel (item) {
+      cancelOrderApi({
+        id: item.id
+      }).then(res => {
+        this.$message.success('取消成功')
+        this.getOrderList()
+      }).catch(err => {
+        this.$message.error(err.msg || '取消失败')
+      })
+    }
   }
 }
 </script>

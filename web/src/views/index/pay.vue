@@ -4,13 +4,13 @@
     <div class="pay-content">
       <div class="title">订单提交成功</div>
       <div class="text time-margin">
-        <span>请在</span>
-        <span class="time">2023-03-12 23:01:19</span>
-        <span>之前付款，超时订单将自动取消</span>
+        <span>请在 </span>
+        <span class="time">{{ddlTime}}</span>
+        <span> 之前付款，超时订单将自动取消</span>
       </div>
       <div class="text">支付金额</div>
       <div class="price">
-        <span class="num">{{amount}}</span>
+        <span class="num">{{ amount }}</span>
         <span>元</span>
       </div>
       <div class="pay-choose-view" style="">
@@ -54,15 +54,41 @@ export default {
   },
   data () {
     return {
+      ddlTime: undefined,
       amount: undefined
     }
   },
   mounted () {
     this.amount = this.$route.query.amount
+
+    this.ddlTime = this.formatDate(new Date().getTime(), 'YY-MM-DD hh:mm:ss')
+
   },
   methods: {
     handlePay () {
       this.$message.warn('暂无支付功能')
+    },
+    formatDate (time, format = 'YY-MM-DD hh:mm:ss') {
+      const date = new Date(time)
+
+      const year = date.getFullYear(),
+        month = date.getMonth() + 1,
+        day = date.getDate() + 1,
+        hour = date.getHours(),
+        min = date.getMinutes(),
+        sec = date.getSeconds()
+      const preArr = Array.apply(null, Array(10)).map(function (elem, index) {
+        return '0' + index
+      })
+
+      const newTime = format.replace(/YY/g, year)
+        .replace(/MM/g, preArr[month] || month)
+        .replace(/DD/g, preArr[day] || day)
+        .replace(/hh/g, preArr[hour] || hour)
+        .replace(/mm/g, preArr[min] || min)
+        .replace(/ss/g, preArr[sec] || sec)
+
+      return newTime
     }
   }
 }

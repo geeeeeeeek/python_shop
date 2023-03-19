@@ -15,12 +15,13 @@
         <div class="things flex-view">
             <div class="thing-item item-column-4" v-for="item in pageData" @click="handleDetail(item)">
               <div class="img-view">
-                <img :src="item.cover" lazy="loaded">
-              </div>
+                <img :src="item.cover"></div>
               <div class="info-view">
-                <h3 class="thing-name">{{item.title}}</h3>
-                <p class="authors" v-if="item.author">{{item.author}}（作者）</p>
-                <p class="translators" v-if="item.translator">{{item.translator}}（译者）</p>
+                <h3 class="thing-name">{{ item.title.substring(0, 12)}}</h3>
+                <span>
+                  <span class="a-price-symbol">¥</span>
+                  <span class="a-price">{{item.price}}</span>
+                </span>
               </div>
             </div>
         </div>
@@ -150,58 +151,56 @@ export default {
 }
 
 .thing-item {
-  position: relative;
-  -webkit-box-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  margin-right: 20px;
   min-width: 255px;
   max-width: 255px;
+  position: relative;
+  flex: 1;
+  margin-right: 20px;
   height: fit-content;
-  border-radius: 4px;
   overflow: hidden;
-  margin-top: 16px;
+  margin-top: 26px;
+  margin-bottom: 36px;
   cursor: pointer;
 
   .img-view {
-    background: #eaf1f5;
-    font-size: 0;
-    text-align: center;
-    height: 156px;
-    padding: 8px 0;
+    //text-align: center;
+    height: 200px;
+    width: 255px;
 
     img {
-      max-width: 100%;
-      height: 100%;
-      display: block;
+      height: 200px;
+      width: 186px;
       margin: 0 auto;
-      border-radius: 4px;
-      -webkit-box-sizing: border-box;
-      box-sizing: border-box;
+      background-size: contain;
     }
   }
 
   .info-view {
-    background: #f6f9fb;
-    text-align: center;
-    height: 108px;
+    //background: #f6f9fb;
     overflow: hidden;
     padding: 0 16px;
-
-    h3 {
-      color: #1c355a;
-      font-weight: 500;
-      font-size: 16px;
-      line-height: 20px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      margin: 12px 0 8px;
+    .thing-name {
+      line-height: 32px;
+      margin-top: 12px;
+      color: #0F1111!important;
+      font-size: 15px!important;
+      font-weight: 400!important;
+      font-style: normal!important;
+      text-transform: none!important;
+      text-decoration: none!important;
     }
 
-    .authors, .translators {
+    .price {
+      color: #ff7b31;
+      font-size: 20px;
+      line-height: 20px;
+      margin-top: 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .translators {
       color: #6f6f6f;
       font-size: 12px;
       line-height: 14px;
@@ -211,6 +210,14 @@ export default {
       white-space: nowrap;
     }
   }
-
 }
+.a-price-symbol {
+  top: -0.5em;
+  font-size: 12px;
+}
+.a-price {
+  color: #0F1111;
+  font-size:21px;
+}
+
 </style>

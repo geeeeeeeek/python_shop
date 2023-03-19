@@ -26,36 +26,37 @@ def count(request):
         thing_count = Thing.objects.all().count()
         # print(utils.get_monday())
         thing_week_count = Thing.objects.filter(create_time__gte=utils.get_monday()).count()
-        order_count = Order.objects.filter(status='1').count()
-        return_count = Order.objects.filter(status='2').count()
-        overdue_count = Order.objects.filter(expect_time__lt=now).count()
+        order_all_pay_count = Order.objects.count()
+        order_not_pay_count = Order.objects.filter(status='1').count()
+        order_payed_count = Order.objects.filter(status='2').count()
+        order_cancel_count = Order.objects.filter(status='7').count()
 
-        # 借书人数(sql语句)
-        order_person_count = 0
+
+        # 未付人数(sql语句)
+        order_not_pay_p_count = 0
         sql_str = "select user_id from b_order where status='1' group by user_id;"
         with connection.cursor() as cursor:
             cursor.execute(sql_str)
             sql_data = dict_fetchall(cursor)
-            order_person_count = len(sql_data)
+            order_not_pay_p_count = len(sql_data)
 
-        # 还书人数(sql语句)
-        return_person_count = 0
+        # 已付人数(sql语句)
+        order_payed_p_count = 0
         sql_str = "select user_id from b_order where status='2' group by user_id;"
         with connection.cursor() as cursor:
             cursor.execute(sql_str)
             sql_data = dict_fetchall(cursor)
-            return_person_count = len(sql_data)
+            order_payed_p_count = len(sql_data)
 
-        # 逾期人数(sql语句)
-        overdue_person_count = 0
-        now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
-        sql_str = "select user_id from b_order where expect_time < '" + now + "' and status='1' group by user_id;"
+        # 取消人数(sql语句)
+        order_cancel_p_count = 0
+        sql_str = "select user_id from b_order where status='7' group by user_id;"
         with connection.cursor() as cursor:
             cursor.execute(sql_str)
             sql_data = dict_fetchall(cursor)
-            overdue_person_count = len(sql_data)
+            order_cancel_p_count = len(sql_data)
 
-        # 统计借阅排名(sql语句)
+        # 统计排名(sql语句)
         sql_str = "select A.thing_id, B.title, count(A.thing_id) as count from b_order A join b_thing B on " \
                   "A.thing_id=B.id group by A.thing_id order by count desc; "
         with connection.cursor() as cursor:
@@ -90,12 +91,13 @@ def count(request):
         data = {
             'thing_count': thing_count,
             'thing_week_count': thing_week_count,
-            'order_count': order_count,
-            'order_person_count': order_person_count,
-            'return_count': return_count,
-            'return_person_count': return_person_count,
-            'overdue_count': overdue_count,
-            'overdue_person_count': overdue_person_count,
+            'order_not_pay_p_count': order_not_pay_p_count,
+            'order_payed_p_count': order_payed_p_count,
+            'order_cancel_p_count': order_cancel_p_count,
+            'order_all_pay_count': order_all_pay_count,
+            'order_not_pay_count': order_not_pay_count,
+            'order_payed_count': order_payed_count,
+            'order_cancel_count': order_cancel_count,
             'order_rank_data': order_rank_data,
             'classification_rank_data': classification_rank_data,
             'visit_data': visit_data
@@ -117,7 +119,7 @@ def sysInfo(request):
         memory = psutil.virtual_memory()
 
         data = {
-            'sysName': '图书管理系统',
+            'sysName': '商城管理系统',
             'versionName': '1.1.0',
             'osName': osName,
             'pyVersion': pyVersion,

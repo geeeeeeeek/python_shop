@@ -6,11 +6,11 @@
 2. 打开cmd命令行，进入mysql，并新建数据库
 ```
 mysql -u root -p
-CREATE DATABASE IF NOT EXISTS book DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
+CREATE DATABASE IF NOT EXISTS shop DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
 ```
 3. 恢复sql数据
 ```
-use book
+use shop
 source xxxx.sql
 ```
 4. 复制资源，将upload文件夹复制到server目录下
@@ -21,7 +21,7 @@ pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple
 ```
 运行项目
 ```
-python manage.py runserver 0.0.0.0:9001
+python manage.py runserver 0.0.0.0:9003
 ```
 7. 后期维护改动
 
@@ -29,11 +29,11 @@ python manage.py runserver 0.0.0.0:9001
 
 ### 删除数据库
 
-drop database if exists book;
+drop database if exists shop;
 
 ### 创建数据库
 
-CREATE DATABASE IF NOT EXISTS book DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
+CREATE DATABASE IF NOT EXISTS shop DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
 
 
 ### 迁移数据库表
