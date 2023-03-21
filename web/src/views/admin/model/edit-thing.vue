@@ -4,7 +4,7 @@
     :model="form"
     :rules="rules">
     <a-row :gutter="24">
-      <a-col span="12">
+      <a-col span="24">
         <a-form-model-item label="商品名称" prop="title">
           <a-input placeholder="请输入" v-model="form.title"></a-input>
         </a-form-model-item>

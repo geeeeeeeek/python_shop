@@ -186,7 +186,7 @@ export default {
       thingId: '',
       detailData: undefined,
       tabUnderLeft: 6,
-      tabData: ['详情', '评论'],
+      tabData: ['简介', '评论'],
       selectTabIndex: 0,
       commentData: [],
       recommendData: [],

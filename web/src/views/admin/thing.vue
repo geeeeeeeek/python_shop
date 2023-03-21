@@ -82,7 +82,7 @@ const columns = [
     title: '简介',
     dataIndex: 'description',
     key: 'description',
-    customRender: (text) => text ? text.substring(0, 5) + '...' : '--'
+    customRender: (text) => text ? text.substring(0, 10) + '...' : '--'
   },
   {
     title: '操作',
