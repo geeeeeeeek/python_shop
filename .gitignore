@@ -9,3 +9,6 @@
 __pycache__
 .idea
 server/.idea
+.DS_Store
+server/.DS_Store
+web/.DS_Store

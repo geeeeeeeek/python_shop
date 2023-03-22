@@ -40,13 +40,11 @@ https://github.com/geeeeeeeek/shop
 ```
 CREATE DATABASE IF NOT EXISTS shop DEFAULT CHARSET utf8 COLLATE utf8_general_ci
 ```
-(4) 迁移数据。在server目录下依次执行如下命令：
+(4) 恢复shop.sql数据。在mysql下依次执行如下命令：
 
 ```
-python manage.py makemigrations
-python manage.py migrate
-python manage.py makemigrations myapp
-python manage.py migrate myapp
+mysql> use shop;
+mysql> source D:/xxx/xxx/shop.sql;
 ```
 
 (5) 启动django服务。在server目录下执行：
