@@ -6,7 +6,7 @@
 整个平台包括前台和后台两个部分。
 
 - 前台功能包括：首页、商品详情页、用户中心模块。
-- 后台功能包括：总览、订单管理、图书管理、分类管理、标签管理、评论管理、用户管理、运营管理、日志管理、系统信息模块。
+- 后台功能包括：总览、订单管理、商品管理、分类管理、标签管理、评论管理、用户管理、运营管理、日志管理、系统信息模块。
 
 ### 源码下载
 
@@ -36,7 +36,7 @@ https://github.com/geeeeeeeek/shop
 
 (2) 安装依赖。进入server目录下，执行 pip install -r requirements.txt
 
-(3) 安装mysql 5.7数据库，并创建数据库，命名为book，创建SQL如下：
+(3) 安装mysql 5.7数据库，并创建数据库，命名为shop，创建SQL如下：
 ```
 CREATE DATABASE IF NOT EXISTS shop DEFAULT CHARSET utf8 COLLATE utf8_general_ci
 ```
@@ -70,11 +70,13 @@ npm run serve
 
 首页
 
+![](https://gitee.com/geeeeeeeek/shop/raw/master/server/upload/img/a.png)
 
-后台首页
 
+后台页面
 
-后台商品管理
+![](https://gitee.com/geeeeeeeek/shop/raw/master/server/upload/img/b.png)
+
 
 
 
@@ -91,4 +93,6 @@ npm run serve
 
 
 ### 打赏作者
+
+![](https://gitee.com/geeeeeeeek/shop/raw/master/server/upload/img/Wechat.jpeg)
 
