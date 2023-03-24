@@ -1,4 +1,9 @@
 
+### 作者微信（lengqin1024）
+
+![](https://gitee.com/geeeeeeeek/shop/raw/master/server/upload/img/weixin.png)
+
+
 ### 功能介绍
 
 平台采用B/S结构，后端采用主流的Python语言进行开发，前端采用主流的Vue.js进行开发。
@@ -79,7 +84,6 @@ npm run serve
 
 
 
-
 ### 待完善功能
 
 - 邮箱推送功能
@@ -87,9 +91,6 @@ npm run serve
 - 粉丝关注功能
 - 支付功能
 
-### 问题咨询
-
-微信：lengqin1024
 
 
 ### 打赏作者
