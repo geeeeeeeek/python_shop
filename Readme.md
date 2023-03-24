@@ -1,7 +1,7 @@
 
 ### 作者微信（lengqin1024）
 
-![](https://gitee.com/geeeeeeeek/shop/raw/master/server/upload/img/weixin.png)
+![](https://raw.githubusercontent.com/geeeeeeeek/shop/master/server/upload/img/weixin.png)
 
 
 ### 功能介绍
@@ -75,12 +75,12 @@ npm run serve
 
 首页
 
-![](https://gitee.com/geeeeeeeek/shop/raw/master/server/upload/img/a.png)
+![](https://raw.githubusercontent.com/geeeeeeeek/shop/master/server/upload/img/a.png)
 
 
 后台页面
 
-![](https://gitee.com/geeeeeeeek/shop/raw/master/server/upload/img/b.png)
+![](https://raw.githubusercontent.com/geeeeeeeek/shop/master/server/upload/img/b.png)
 
 
 
@@ -95,5 +95,5 @@ npm run serve
 
 ### 打赏作者
 
-![](https://gitee.com/geeeeeeeek/shop/raw/master/server/upload/img/Wechat.jpeg)
+![](https://raw.githubusercontent.com/geeeeeeeek/shop/master/server/upload/img/Wechat.jpeg)
 
