@@ -1,7 +1,4 @@
 
-### 作者微信（lengqin1024）
-
-![](https://raw.githubusercontent.com/geeeeeeeek/shop/master/server/upload/img/weixin.png)
 
 
 ### 功能介绍
@@ -91,7 +88,9 @@ npm run serve
 - 粉丝关注功能
 - 支付功能
 
+### 问题咨询
 
+微信：lengqin1024
 
 ### 打赏作者
 
