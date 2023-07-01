@@ -61,7 +61,7 @@ npm install
 ```
 (3) 运行项目
 ```
-npm run serve
+npm run dev
 ```
 
 
