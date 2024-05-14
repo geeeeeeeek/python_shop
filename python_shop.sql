@@ -197,7 +197,7 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `b_ad`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `b_ad` (
+CREATE TABLE `b_ad1` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `image` varchar(100) DEFAULT NULL,
   `link` varchar(500) DEFAULT NULL,
