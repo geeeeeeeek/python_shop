@@ -38,11 +38,6 @@ const constantRouterMap = [
         component: () => import('@/views/index/portal')
       },
       {
-        path: 'detail',
-        name: 'detail',
-        component: () => import('@/views/index/detail')
-      },
-      {
         path: 'confirm',
         name: 'confirm',
         component: () => import('@/views/index/confirm')
