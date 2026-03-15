@@ -1,4 +1,4 @@
-> 学习过程中，遇到问题可以咨询作者，如需完整源码，可联系客服微信购买：Java2048
+> 学习过程中，遇到问题可以咨询作者，如需完整源码，可联系客服微信购买（底部）
 
 
 ### 功能介绍
@@ -65,18 +65,7 @@ npm run dev
 ```
 
 
-### 界面预览
-
-首页
-
-![](https://raw.githubusercontent.com/geeeeeeeek/shop/master/server/upload/img/a.png)
-
-
-后台页面
-
-![](https://raw.githubusercontent.com/geeeeeeeek/shop/master/server/upload/img/b.png)
-
-
+ 
 
 ### 参考论文
 
@@ -86,9 +75,7 @@ npm run dev
 
 微信（lengqin1024）
 
+QQ（912750350）
 
-
-### 打赏作者
-
-![](https://raw.githubusercontent.com/geeeeeeeek/shop/master/server/upload/img/Wechat.jpeg)
+ 
 
